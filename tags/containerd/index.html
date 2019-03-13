@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="cuisongliu的个人博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tags">
-<meta name="twitter:title" content="Tags">
-<meta property="og:url" content="https://cuisongliu.github.io/tags/">
-<meta property="twitter:url" content="https://cuisongliu.github.io/tags/">
+<meta property="og:title" content="Containerd">
+<meta name="twitter:title" content="Containerd">
+<meta property="og:url" content="https://cuisongliu.github.io/tags/containerd/">
+<meta property="twitter:url" content="https://cuisongliu.github.io/tags/containerd/">
 <meta property="og:site_name" content="cuisongliu 的个人博客">
 <meta property="og:description" content="cuisongliu的个人博客">
 <meta name="twitter:description" content="cuisongliu的个人博客">
@@ -39,16 +39,16 @@
   <meta property="twitter:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
 
 
-    <title>Tags</title>
+    <title>Containerd</title>
 
     <link rel="icon" href="https://cuisongliu.github.io/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://cuisongliu.github.io/tags/index.xml">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://cuisongliu.github.io/tags/containerd/index.xml">
     
 
     
 
-    <link rel="canonical" href="https://cuisongliu.github.io/tags/">
+    <link rel="canonical" href="https://cuisongliu.github.io/tags/containerd/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -187,76 +187,81 @@
 </nav>
 
       
+        
 
+      
       <div id="main" data-behavior="1"
         class="
                hasCoverMetaIn
                ">
+        
+          <section class="postShorten-group main-content-wrap">
+            
+            
+              
+  
+    
+  
 
-        <div id="tags-archives" class="main-content-wrap">
-          <form id="filter-form" action="#">
-            <input name="tag" type="text" class="form-control input--xlarge" placeholder="搜索标签" autofocus="autofocus">
-          </form>
-          <h4 class="archive-result text-color-base text-xlarge"
-              data-message-zero="没有找到标签"
-              data-message-one="找到 1 个标签"
-              data-message-other="找到 {n} 个标签"></h4>
 
-            <section>
-              
-                <a class="tag tag--primary tag--small" href="#containerd-list" data-tag="containerd">
-                  containerd
-                </a>
-              
-                <a class="tag tag--primary tag--small" href="#kubernetes-list" data-tag="kubernetes">
-                  kubernetes
-                </a>
-              
-            </section>
-            <section class="boxes">
-              
-                <div id="containerd-list" class="archive box" data-tag="containerd">
-                  <h4 class="archive-title">
-                    <a class="link-unstyled" href="containerd">
-                      containerd (1)
-                    </a>
-                  </h4>
-                  <ul class="archive-posts">
-                    
-                      <li class="archive-post">
-                        <a class="archive-post-title" href="https://cuisongliu.github.io/2019/03/chinese-test/">
-                          containerd与kubernetes集成
-                        </a>
-                        <span class="archive-post-date"> - 
+  
+
+<article class="postShorten postShorten--thumbnailimg-top" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+      <a href="https://cuisongliu.github.io/2019/03/chinese-test/">
+        <div class="postShorten-thumbnailimg">
+          <img alt="" itemprop="image" src="https://cuisongliu.github.io/img/k8s-containerd/containerd-color.png"/>
+        </div>
+      </a>
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/chinese-test/">
+          containerd与kubernetes集成
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-03-12T00:00:00Z">
+        
   三月 12, 2019
-</span>
-                      </li>
-                    
-                  </ul>
-                </div>
-              
-                <div id="kubernetes-list" class="archive box" data-tag="kubernetes">
-                  <h4 class="archive-title">
-                    <a class="link-unstyled" href="kubernetes">
-                      kubernetes (1)
-                    </a>
-                  </h4>
-                  <ul class="archive-posts">
-                    
-                      <li class="archive-post">
-                        <a class="archive-post-title" href="https://cuisongliu.github.io/2019/03/chinese-test/">
-                          containerd与kubernetes集成
-                        </a>
-                        <span class="archive-post-date"> - 
-  三月 12, 2019
-</span>
-                      </li>
-                    
-                  </ul>
-                </div>
-              
-           </section>
-         </div>
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://cuisongliu.github.io/categories/kubernetes">kubernetes</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      
+        <p>本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
+以及相关部署配置说明。<br/>
+由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。</p>
+      
+      <p>
+        <a href="https://cuisongliu.github.io/2019/03/chinese-test/" class="postShorten-excerpt_link link">阅读全文</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+            
+            
+
+          </section>
+        
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2019 <a href="https://github.com/cuisongliu">cuisongliu</a>. All Rights Reserved
@@ -265,6 +270,7 @@
 
       </div>
     </div>
+    
     <div id="about">
   <div id="about-card">
     <div id="about-btn-close">
@@ -294,6 +300,56 @@
   </div>
 </div>
 
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/chinese-test/">
+                <h3 class="media-heading">containerd与kubernetes集成</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
+以及相关部署配置说明。<br/>
+由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         1 posts found
+      </p>
+    </div>
+  </div>
+</div>
     
   
     
@@ -301,8 +357,7 @@
   
 
 
-  </body>
-  
+    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
@@ -348,4 +403,7 @@ $(document).ready(function() {
 
 
 
+    
+  </body>
 </html>
+

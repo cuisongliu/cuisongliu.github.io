@@ -3,23 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://cuisongliu.github.io/posts/k8s-containerd/</loc>
+    <loc>https://cuisongliu.github.io/2019/03/chinese-test/</loc>
     <lastmod>2019-03-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/about/</loc>
-    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuisongliu.github.io/posts/hello/</loc>
-    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuisongliu.github.io/showcase/</loc>
-    <lastmod>2019-01-18T00:00:00+00:00</lastmod>
+    <loc>https://cuisongliu.github.io/archives/</loc>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -28,13 +18,32 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/posts/</loc>
+    <loc>https://cuisongliu.github.io/tags/containerd/</loc>
+    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
+    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
+    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/post/</loc>
     <lastmod>2019-03-12T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/tags/</loc>
+    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
