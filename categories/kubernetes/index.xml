@@ -6,17 +6,26 @@
     <description>Recent content in Kubernetes on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 12 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 22 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>多网卡配置安装kubeadm</title>
+      <link>https://cuisongliu.github.io/2019/03/kubernetes-netbrige/</link>
+      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/03/kubernetes-netbrige/</guid>
+      <description>&lt;p&gt;本文主要讲解如何修改多网卡配置安装kubeadm。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>containerd与kubernetes集成</title>
-      <link>https://cuisongliu.github.io/2019/03/kubernetes/</link>
+      <link>https://cuisongliu.github.io/2019/03/kubernetes-containerd/</link>
       <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://cuisongliu.github.io/2019/03/kubernetes/</guid>
+      <guid>https://cuisongliu.github.io/2019/03/kubernetes-containerd/</guid>
       <description>&lt;p&gt;本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
 以及相关部署配置说明。&lt;br/&gt;
 由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。&lt;/p&gt;</description>

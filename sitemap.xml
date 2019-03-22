@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://cuisongliu.github.io/2019/03/docker/</loc>
+    <loc>https://cuisongliu.github.io/2019/03/docker-lxcfs/</loc>
     <lastmod>2019-03-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/2019/03/kubernetes/</loc>
+    <loc>https://cuisongliu.github.io/2019/03/kubernetes-netbrige/</loc>
+    <lastmod>2019-03-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/2019/03/kubernetes-containerd/</loc>
     <lastmod>2019-03-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/2019/03/git/</loc>
+    <loc>https://cuisongliu.github.io/2019/03/git-https/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   
@@ -70,19 +75,31 @@
   </url>
   
   <url>
+    <loc>https://cuisongliu.github.io/tags/kubeadm/</loc>
+    <lastmod>2019-03-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
-    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
+    <lastmod>2019-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
-    <lastmod>2019-03-12T00:00:00+00:00</lastmod>
+    <lastmod>2019-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/tags/lxcfs/</loc>
+    <lastmod>2019-03-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/netbrige/</loc>
     <lastmod>2019-03-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

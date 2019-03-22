@@ -13,10 +13,10 @@
     
     <item>
       <title>git连接https仓库</title>
-      <link>https://cuisongliu.github.io/2019/03/git/</link>
+      <link>https://cuisongliu.github.io/2019/03/git-https/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://cuisongliu.github.io/2019/03/git/</guid>
+      <guid>https://cuisongliu.github.io/2019/03/git-https/</guid>
       <description>&lt;p&gt;本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。&lt;/p&gt;</description>
     </item>
     

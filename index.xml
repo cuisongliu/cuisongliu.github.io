@@ -13,19 +13,28 @@
     
     <item>
       <title>利用LXCFS增强容器隔离性和资源可见性</title>
-      <link>https://cuisongliu.github.io/2019/03/docker/</link>
+      <link>https://cuisongliu.github.io/2019/03/docker-lxcfs/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://cuisongliu.github.io/2019/03/docker/</guid>
+      <guid>https://cuisongliu.github.io/2019/03/docker-lxcfs/</guid>
       <description>&lt;p&gt;本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。&lt;/p&gt;</description>
     </item>
     
     <item>
+      <title>多网卡配置安装kubeadm</title>
+      <link>https://cuisongliu.github.io/2019/03/kubernetes-netbrige/</link>
+      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/03/kubernetes-netbrige/</guid>
+      <description>&lt;p&gt;本文主要讲解如何修改多网卡配置安装kubeadm。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>containerd与kubernetes集成</title>
-      <link>https://cuisongliu.github.io/2019/03/kubernetes/</link>
+      <link>https://cuisongliu.github.io/2019/03/kubernetes-containerd/</link>
       <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://cuisongliu.github.io/2019/03/kubernetes/</guid>
+      <guid>https://cuisongliu.github.io/2019/03/kubernetes-containerd/</guid>
       <description>&lt;p&gt;本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
 以及相关部署配置说明。&lt;br/&gt;
 由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。&lt;/p&gt;</description>
@@ -33,10 +42,10 @@
     
     <item>
       <title>git连接https仓库</title>
-      <link>https://cuisongliu.github.io/2019/03/git/</link>
+      <link>https://cuisongliu.github.io/2019/03/git-https/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://cuisongliu.github.io/2019/03/git/</guid>
+      <guid>https://cuisongliu.github.io/2019/03/git-https/</guid>
       <description>&lt;p&gt;本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。&lt;/p&gt;</description>
     </item>
     
