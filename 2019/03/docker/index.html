@@ -8,45 +8,39 @@
 <meta name="generator" content="Hugo 0.55.0-DEV with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
-<meta name="description" content="本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。
-由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。">
+<meta name="description" content="本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。">
 
 
-<meta property="og:description" content="本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。
-由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。">
+<meta property="og:description" content="本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="containerd与kubernetes集成">
-<meta name="twitter:title" content="containerd与kubernetes集成">
-<meta property="og:url" content="https://cuisongliu.github.io/2019/03/chinese-test/">
-<meta property="twitter:url" content="https://cuisongliu.github.io/2019/03/chinese-test/">
+<meta property="og:title" content="利用LXCFS增强容器隔离性和资源可见性">
+<meta name="twitter:title" content="利用LXCFS增强容器隔离性和资源可见性">
+<meta property="og:url" content="https://cuisongliu.github.io/2019/03/docker/">
+<meta property="twitter:url" content="https://cuisongliu.github.io/2019/03/docker/">
 <meta property="og:site_name" content="cuisongliu 的个人博客">
-<meta property="og:description" content="本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。
-由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。">
-<meta name="twitter:description" content="本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。
-由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。">
+<meta property="og:description" content="本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。">
+<meta name="twitter:description" content="本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。">
 <meta property="og:locale" content="zh-cn">
 
   
-    <meta property="article:published_time" content="2019-03-12T00:00:00">
+    <meta property="article:published_time" content="2019-03-22T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-03-12T00:00:00">
+    <meta property="article:modified_time" content="2019-03-22T00:00:00">
   
-  
-  
-    
-      <meta property="article:section" content="kubernetes">
-    
   
   
     
-      <meta property="article:tag" content="kubernetes">
+      <meta property="article:section" content="docker">
     
-      <meta property="article:tag" content="containerd">
+  
+  
+    
+      <meta property="article:tag" content="docker">
+    
+      <meta property="article:tag" content="cgroup">
+    
+      <meta property="article:tag" content="lxcfs">
     
   
 
@@ -59,9 +53,6 @@
 
 
 
-  <meta property="og:image" content="https://cuisongliu.github.io/img/k8s-containerd/containerd-color.png">
-  <meta property="twitter:image" content="https://cuisongliu.github.io/img/k8s-containerd/containerd-color.png">
-
 
 
 
@@ -70,14 +61,14 @@
   <meta property="twitter:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
 
 
-    <title>containerd与kubernetes集成</title>
+    <title>利用LXCFS增强容器隔离性和资源可见性</title>
 
     <link rel="icon" href="https://cuisongliu.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://cuisongliu.github.io/2019/03/chinese-test/">
+    <link rel="canonical" href="https://cuisongliu.github.io/2019/03/docker/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -227,15 +218,15 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      containerd与kubernetes集成
+      利用LXCFS增强容器隔离性和资源可见性
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-03-12T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-03-22T00:00:00Z">
         
-  三月 12, 2019
+  三月 22, 2019
 
       </time>
     
@@ -244,7 +235,7 @@
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://cuisongliu.github.io/categories/kubernetes">kubernetes</a>
+      <a class="category-link" href="https://cuisongliu.github.io/categories/docker">docker</a>
     
   
 
@@ -254,214 +245,234 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。<br/>
-由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。</p>
+              <p>本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。</p>
 
-<h1 id="table-of-contents">目录</h1><nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#概念介绍">概念介绍</a></li>
-<li><a href="#环境准备">环境准备</a></li>
-<li><a href="#安装">安装</a>
-<ul>
-<li><a href="#安装containerd">安装containerd</a></li>
-<li><a href="#使用crictl连接containerd">使用crictl连接containerd</a></li>
-<li><a href="#containerd部署脚本">containerd部署脚本</a></li>
-<li><a href="#导入kubenetes离线镜像包-kubernetes调整">导入kubenetes离线镜像包（kubernetes调整）</a></li>
-<li><a href="#修改kubelet配置和kubeadm安装时配置-kubernetes调整">修改kubelet配置和kubeadm安装时配置（kubernetes调整）</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
+<div class="alert info ">
+  <p><p>基于LXCFS增强docker容器隔离性的分析
+<a href="https://blog.csdn.net/s1234567_89/article/details/50722915">https://blog.csdn.net/s1234567_89/article/details/50722915</a></p>
 
-<blockquote>
-<p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
-</blockquote>
+<p>Kubernetes之路 2 - 利用LXCFS提升容器资源可见性
+<a href="https://yq.aliyun.com/articles/566208">https://yq.aliyun.com/articles/566208</a></p>
+</p>
+</div>
 
-<h2 id="概念介绍">概念介绍</h2>
+<p>使用二进制lxcfs包进行安装部署，下载地址为：
+<a href="https://github.com/cuisongliu/lxcfs/releases/download/lxcfs-3.0.3-binary-install/lxcfs.tar.gz">https://github.com/cuisongliu/lxcfs/releases/download/lxcfs-3.0.3-binary-install/lxcfs.tar.gz</a>
+<div class="alert warning ">
+  <p>确保系统中是否有fusermount命令,系统使用fusermount进行卸载挂载点。</p>
+</div></p>
 
-<ul>
-<li>cri (Container runtime interface)
+<p>安装如图：</p>
 
-<ul>
-<li><code>cri</code> is a <a href="https://containerd.io/">containerd</a> plugin implementation of Kubernetes <a href="https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/apis/cri/runtime/v1alpha2/api.proto">container runtime interface (CRI)</a>.</li>
-<li>cri是 kubernetes的容器运行时接口的容器插件实现。</li>
-<li><img src="https://cuisongliu.github.io/img/k8s-containerd/cri.png" alt="CRI" /></li>
-</ul></li>
 
-<li><p>containerd</p>
-
-<ul>
-<li>containerd is an industry-standard container runtime with an emphasis on simplicity, robustness and portability.</li>
-<li>containerd完全支持运行容器的的CRI运行时规范。</li>
-<li>cri在containerd1.1以上的版本的原生插件。它内置于containerd并默认启用。</li>
-<li><img src="https://gogs.cuisongliu.com/cuisongliu/cuisongliu-github/raw/master/static/img/k8s-containerd/containerd.png" alt="containerd" /></li>
-</ul></li>
-
-<li><p>cri-o</p>
-
-<ul>
-<li>OCI-based implementation of Kubernetes Container Runtime Interface.</li>
-<li>kubernetes为了兼容cri和oci孵化了项目cri-o。为了架设在cri和oci之间的一座桥梁。由此cri-o既兼容cri插件实现又兼容oci的容器运行时标准。</li>
-</ul></li>
-
-<li><p>oci (Open Container Initiative)</p>
-
-<ul>
-<li><a href="https://www.opencontainers.org/about/oci-scope-table">https://www.opencontainers.org/about/oci-scope-table</a></li>
-<li>oci是由多家公司成立的项目,并由linux基金会进行管理,致力于container runtime 的标准的制定和runc的开发等工作。</li>
-</ul></li>
-
-<li><p>runc</p>
-
-<ul>
-<li><code>runc</code> is a CLI tool for spawning and running containers according to the OCI specification.</li>
-<li>runc，是对于OCI标准的一个参考实现，是一个可以用于创建和运行容器的CLI(command-line interface)工具。</li>
-</ul></li>
-</ul>
-
-<p><img src="https://gogs.cuisongliu.com/cuisongliu/cuisongliu-github/raw/master/static/img/k8s-containerd/kubelet.png" alt="kubelet" /></p>
-
-<h2 id="环境准备">环境准备</h2>
-
-<p>下载containerd二进制包。我这里已经编译并打包了好了，内含containerd、runc、crictl、ctr等。</p>
-
-<p>下载链接：<a href="https://github.com/cuisongliu/containerd-dist/releases/download/v1.2.4/containerd-v1.2.4.tar.gz">containerd-v1.2.4.tar.gz</a></p>
-
-<ul>
-<li>runc版本：  1.0.1-dev</li>
-<li>containerd版本： v1.2.4</li>
-</ul>
-
-<h2 id="安装">安装</h2>
-
-<h3 id="安装containerd">安装containerd</h3>
-
-<ul>
-<li><p>解压二进制包并生成默认文件</p>
-
-<pre><code class="language-shell">tar -C /usr/local/bin -xzf containerd-v1.2.4.tar.gz
-chmod a+x /usr/local/bin/*
-mkdir -p /etc/containerd
-containerd config default &gt; /etc/containerd/config.toml
-</code></pre>
-
-<p>生成的默认配置文件注意  <code>[grpc]</code> 的 <code>address</code>  字段默认为 <code>/run/containerd/containerd.sock</code></p>
-
-<p>配置文件其他参数含义参照github地址： <a href="https://github.com/containerd/containerd/blob/master/docs/man/containerd-config.toml.5.md">containerd-config.md</a></p></li>
-
-<li><p>在  <code>/etc/systemd/system</code> 目录下编写文件  <code>containerd.service</code>内容如下:</p>
-
-<pre><code>[Unit]
-Description=containerd container runtime
-Documentation=https://containerd.io
-After=network.target
+ 
   
-[Service]
-ExecStartPre=/sbin/modprobe overlay
-ExecStart=/usr/local/bin/containerd
-Restart=always
-RestartSec=5
-Delegate=yes
-KillMode=process
-OOMScoreAdjust=-999
-LimitNOFILE=1048576
-LimitNPROC=infinity
-LimitCORE=infinity
   
-[Install]
-WantedBy=multi-user.target
-</code></pre></li>
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
 
-<li><p>启动containerd</p>
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
 
-<pre><code class="language-shell">systemctl enable containerd
-systemctl restart containerd
-systemctl status containerd
-</code></pre>
+<div class="figure right" >
+  
+    <a class="fancybox" href="https://cuisongliu.github.io/img/lxcfs/lxcfs.png" title="lxcfs安装步骤" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://cuisongliu.github.io/img/lxcfs/lxcfs.png"  alt="lxcfs安装步骤">
+  
+    </a>
+  
+   
+    <span class="caption">lxcfs安装步骤</span>
+  
+</div>
 
-<p>看containerd启动状态如果是running就没有问题。下面我们测试拉取一下hub的镜像。</p></li>
+  <div style="clear:both;"></div>
 
-<li><p>测试containerd</p>
 
-<pre><code>ctr images pull docker.io/library/nginx:alpine
-</code></pre>
+<p>操作是不是很easy?下面我们对比一下效果。</p>
 
-<p>看到输出done，说明containerd运行一切正常。</p></li>
-</ul>
+<p>首先是在没有安装lxcfs的主机上执行命令：
 
-<h3 id="使用crictl连接containerd">使用crictl连接containerd</h3>
+  
+    
+  
+  
+  
+  
 
-<blockquote>
-<p>下一步我们使用crictl连接containerd。</p>
-</blockquote>
 
-<ul>
-<li><p>修改crictl的配置文件,在  <code>/etc/crictl.yaml</code> 写入以下内容：</p>
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>bash</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">docker run --rm -ti  -m 200m ubuntu bash
+free -m</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+效果如图所示：
 
-<pre><code class="language-shell">runtime-endpoint: unix:///run/containerd/containerd.sock
-image-endpoint: unix:///run/containerd/containerd.sock
-timeout: 10
-debug: false
-</code></pre>
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
 
-<p>这里注意runtime-endpoint 和image-endpoint 必须与/etc/containerd/config.toml中配置保持一致。</p></li>
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
 
-<li><p>验证一下cri插件是否可用</p>
+<div class="figure right" >
+  
+    <a class="fancybox" href="https://cuisongliu.github.io/img/lxcfs/lxcfs-0.png" title="未使用lxcfs效果图" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://cuisongliu.github.io/img/lxcfs/lxcfs-0.png"  alt="未使用lxcfs效果图">
+  
+    </a>
+  
+   
+    <span class="caption">未使用lxcfs效果图</span>
+  
+</div>
 
-<pre><code class="language-shell">crictl  pull nginx:alpine
-crictl  rmi  nginx:alpine
-crictl  images
-</code></pre>
+  <div style="clear:both;"></div>
 
-<p>其中   <code>crictl  images</code>  会列出所有的cri容器镜像。</p>
+接下来我们在安装了lxcfs的主机上同样执行命令
 
-<p>到此我们的cri + containerd已经完成整合了。下一步我们需要修改kubeadm配置进行安装。</p></li>
-</ul>
+  
+    
+  
+  
+  
+  
 
-<h3 id="containerd部署脚本">containerd部署脚本</h3>
 
-<p>到此我特意重新整理了部署脚本,包括containerd,ctr,circtl等配置。具体详细配置请移步<a href="https://github.com/cuisongliu/containerd-dist">containerd-dist</a></p>
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>bash</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">docker run --rm -it -m 200m \
+      -v /var/lib/lxcfs/proc/cpuinfo:/proc/cpuinfo:rw \
+      -v /var/lib/lxcfs/proc/diskstats:/proc/diskstats:rw \
+      -v /var/lib/lxcfs/proc/meminfo:/proc/meminfo:rw \
+      -v /var/lib/lxcfs/proc/stat:/proc/stat:rw \
+      -v /var/lib/lxcfs/proc/swaps:/proc/swaps:rw \
+      -v /var/lib/lxcfs/proc/uptime:/proc/uptime:rw \
+      ubuntu bash</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+效果如图所示：
 
-<h3 id="导入kubenetes离线镜像包-kubernetes调整">导入kubenetes离线镜像包（kubernetes调整）</h3>
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
 
-<blockquote>
-<p>这里我们就需要导入k8s的离线镜像包了。<strong>这里需要注意一下，kubernetes是调用的cri接口,所以导入时也需要从cri插件导入镜像。</strong></p>
-</blockquote>
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
 
-<ul>
-<li><p>cri导入镜像命令(cri导入镜像)：</p>
+<div class="figure right" >
+  
+    <a class="fancybox" href="https://cuisongliu.github.io/img/lxcfs/lxcfs-1.png" title="使用lxcfs效果图" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://cuisongliu.github.io/img/lxcfs/lxcfs-1.png"  alt="使用lxcfs效果图">
+  
+    </a>
+  
+   
+    <span class="caption">使用lxcfs效果图</span>
+  
+</div>
 
-<pre><code class="language-shell">ctr cri load  images.tar
-</code></pre></li>
+  <div style="clear:both;"></div>
 
-<li><p>containerd导入镜像命令(containerd导入镜像)：</p>
+到这里lxcfs已经生效了。</p>
 
-<pre><code>ctr images import images.tar 
-</code></pre></li>
-</ul>
-
-<h3 id="修改kubelet配置和kubeadm安装时配置-kubernetes调整">修改kubelet配置和kubeadm安装时配置（kubernetes调整）</h3>
-
-<ul>
-<li><p>在 kubelet配置文件 10-kubeadm.conf 的<code>[Service]</code> 结点加入以下配置：</p>
-
-<pre><code>Environment=&quot;KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock&quot;
-</code></pre></li>
-
-<li><p>在kubeadm配置文件 kubeadm.yaml 中加入</p>
-
-<pre><code class="language-yaml">apiVersion: kubeadm.k8s.io/v1beta1
-kind: InitConfiguration
-nodeRegistration:
-  criSocket: /run/containerd/containerd.sock
-  name: containerd
-</code></pre></li>
-</ul>
-
-<p>到此containerd和kubernetes的集成就完成了。下面可以直接安装即可。</p>
+<div class="alert success ">
+  <p>这里讲解了docker的使用,对于k8s用户建议使用 <a href="https://github.com/fanux/kube/releases/tag/v.12.5-lxcfs-gate">https://github.com/fanux/kube/releases/tag/v.12.5-lxcfs-gate</a>
+替换k8s的kebelet即可。</p>
+</div>
               
             </div>
           </div>
@@ -473,9 +484,11 @@ nodeRegistration:
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/kubernetes/">kubernetes</a>
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/docker/">docker</a>
 
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/containerd/">containerd</a>
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/cgroup/">cgroup</a>
+
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/lxcfs/">lxcfs</a>
 
                   </div>
                 
@@ -496,7 +509,7 @@ nodeRegistration:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/" data-tooltip="containerd与kubernetes集成">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -514,19 +527,19 @@ nodeRegistration:
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -541,7 +554,7 @@ nodeRegistration:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -582,7 +595,7 @@ nodeRegistration:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/" data-tooltip="containerd与kubernetes集成">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -600,19 +613,19 @@ nodeRegistration:
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/chinese-test/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/docker/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -627,7 +640,7 @@ nodeRegistration:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -642,19 +655,19 @@ nodeRegistration:
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fchinese-test%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fdocker%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fchinese-test%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fdocker%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fchinese-test%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fdocker%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>
@@ -715,7 +728,24 @@ nodeRegistration:
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/chinese-test/">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/docker/">
+                <h3 class="media-heading">利用LXCFS增强容器隔离性和资源可见性</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes/">
                 <h3 class="media-heading">containerd与kubernetes集成</h3>
               </a>
               <span class="media-meta">
@@ -731,6 +761,23 @@ nodeRegistration:
             <hr>
           </div>
         
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/git/">
+                <h3 class="media-heading">git连接https仓库</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
       </div>
     </div>
     <div class="modal-footer">
@@ -738,7 +785,7 @@ nodeRegistration:
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         1 posts found
+         3 posts found
       </p>
     </div>
   </div>
@@ -797,9 +844,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/03\/chinese-test\/';
+          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/03\/docker\/';
           
-            this.page.identifier = '\/2019\/03\/chinese-test\/'
+            this.page.identifier = '\/2019\/03\/docker\/'
           
         };
         (function() {
