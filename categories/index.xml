@@ -20,6 +20,15 @@
     </item>
     
     <item>
+      <title>Drone</title>
+      <link>https://cuisongliu.github.io/categories/drone/</link>
+      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/drone/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Git</title>
       <link>https://cuisongliu.github.io/categories/git/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
@@ -31,7 +40,7 @@
     <item>
       <title>Kubernetes</title>
       <link>https://cuisongliu.github.io/categories/kubernetes/</link>
-      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/categories/kubernetes/</guid>
       <description></description>

@@ -8,37 +8,41 @@
 <meta name="generator" content="Hugo 0.55.0-DEV with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
-<meta name="description" content="本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。">
+<meta name="description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
 
 
-<meta property="og:description" content="本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。">
+<meta property="og:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git连接https仓库">
-<meta name="twitter:title" content="git连接https仓库">
-<meta property="og:url" content="https://cuisongliu.github.io/2019/03/git-https/">
-<meta property="twitter:url" content="https://cuisongliu.github.io/2019/03/git-https/">
+<meta property="og:title" content="利用drone构建ci/cd系统，对接k8s">
+<meta name="twitter:title" content="利用drone构建ci/cd系统，对接k8s">
+<meta property="og:url" content="https://cuisongliu.github.io/2019/04/drone/k8s/">
+<meta property="twitter:url" content="https://cuisongliu.github.io/2019/04/drone/k8s/">
 <meta property="og:site_name" content="cuisongliu 的个人博客">
-<meta property="og:description" content="本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。">
-<meta name="twitter:description" content="本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。">
+<meta property="og:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
+<meta name="twitter:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
 <meta property="og:locale" content="zh-cn">
 
   
-    <meta property="article:published_time" content="2019-03-10T00:00:00">
+    <meta property="article:published_time" content="2019-04-03T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-03-10T00:00:00">
+    <meta property="article:modified_time" content="2019-04-03T00:00:00">
   
-  
-  
-    
-      <meta property="article:section" content="git">
-    
   
   
     
-      <meta property="article:tag" content="git">
+      <meta property="article:section" content="drone">
     
-      <meta property="article:tag" content="https">
+      <meta property="article:section" content="kubernetes">
+    
+  
+  
+    
+      <meta property="article:tag" content="kubernetes">
+    
+      <meta property="article:tag" content="drone">
+    
+      <meta property="article:tag" content="devops">
     
   
 
@@ -59,14 +63,14 @@
   <meta property="twitter:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
 
 
-    <title>git连接https仓库</title>
+    <title>利用drone构建ci/cd系统，对接k8s</title>
 
     <link rel="icon" href="https://cuisongliu.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://cuisongliu.github.io/2019/03/git-https/">
+    <link rel="canonical" href="https://cuisongliu.github.io/2019/04/drone/k8s/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -143,26 +147,6 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://cuisongliu.github.io/tags">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
-      
-      <span class="sidebar-button-desc">标签</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://cuisongliu.github.io/archives">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
-      
-      <span class="sidebar-button-desc">归档</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
       <a class="sidebar-button-link " href="https://cuisongliu.github.io/#about">
     
       <i class="sidebar-button-icon fa fa-lg fa-question"></i>
@@ -182,6 +166,26 @@
       <i class="sidebar-button-icon fa fa-lg fa-github"></i>
       
       <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
     </a>
   </li>
 
@@ -216,15 +220,15 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      git连接https仓库
+      利用drone构建ci/cd系统，对接k8s
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-03-10T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-04-03T00:00:00Z">
         
-  三月 10, 2019
+  四月 3, 2019
 
       </time>
     
@@ -233,7 +237,9 @@
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://cuisongliu.github.io/categories/git">git</a>
+      <a class="category-link" href="https://cuisongliu.github.io/categories/drone">drone</a>, 
+    
+      <a class="category-link" href="https://cuisongliu.github.io/categories/kubernetes">kubernetes</a>
     
   
 
@@ -243,26 +249,31 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。</p>
+              <p>主要讲述如果使用github和drone进行代码环境下的ci/cd环境。</p>
 
-<h1 id="table-of-contents">目录</h1><nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#使用http克隆仓库">使用http克隆仓库</a></li>
-<li><a href="#使用git源码重新编译">使用git源码重新编译</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
+<blockquote>
+<p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
+</blockquote>
 
-<div class="alert warning ">
-  <p>在Debian等操作系统使用git clone 经常出现<code>error: gnutls_handshake() failed: A TLS packet with unexpected length was received</code> 错误。</p>
+<div class="alert info ">
+  <p>基于drone构建CI/CD系统,对接k8s
+<a href="https://sealyun.com/post/ci-cd/">https://sealyun.com/post/ci-cd/</a></p>
 </div>
 
-<h3 id="使用http克隆仓库">使用http克隆仓库</h3>
+<p>直接进入主题,主要使用<a href="https://github.com/cuisongliu/drone-kube">drone-kube</a>插件进行drone的k8s部署。
+该插件主要包括两大功能,初始化kubeconfig文件和渲染部署k8s相关文件。</p>
+
+<h3 id="kubeconfig文件渲染">kubeconfig文件渲染</h3>
+
+<div class="alert warning ">
+  <p>使用命令模式drone-kube config进行kubeconfig文件渲染管理员文件,使用命令模式drone-kube configToken进行kubeconfig文件渲染用户token管理文件。</p>
+</div>
+
+<h4 id="管理员模式">管理员模式</h4>
+
+<div class="alert info ">
+  <p>该模式为最常见的kubernetes-admin管理方式。</p>
+</div>
 
 
   
@@ -276,27 +287,45 @@
 <figure class="highlight  language-">
   <figcaption>
     
-      <span>bash</span>
+      <span>.drone.yml</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">#!/bin/bash
-git clone http://github.com/cuisongliu/xxx</code></pre>
+          <pre class="code-highlight language-"><code class="">- name: deploy-font
+  image: cuisongliu/drone-kube
+  settings:
+    server:
+      from_secret: k8s-server
+    ca:
+      from_secret: k8s-ca
+    admin:
+      from_secret: k8s-admin
+    admin_key:
+      from_secret: k8s-admin-key
+  commands:
+    - drone-kube config  &gt;&gt; /dev/null
+    - kubectl delete -f deploy/deploy.yaml || true
+    - sleep 15
+    - kubectl create -f deploy/deploy.yaml || true</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
 </figure>
 
-<h3 id="使用git源码重新编译">使用git源码重新编译</h3>
+<h4 id="多租户模式">多租户模式</h4>
 
-<p>
+<div class="alert info ">
+  <p>该模式为kubernetes下发user-token的模式。</p>
+</div>
+
+
   
     
   
@@ -308,25 +337,46 @@ git clone http://github.com/cuisongliu/xxx</code></pre>
 <figure class="highlight  language-">
   <figcaption>
     
-      <span>bash</span>
+      <span>.drone.yml</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">#!/bin/bash
-git clone http://github.com/git/git.git
-sudo apt-get install libcurl4-openssl-dev</code></pre>
+          <pre class="code-highlight language-"><code class="">- name: deploy-font
+  image: cuisongliu/drone-kube
+  settings:
+    server:
+      from_secret: k8s-server
+    user:
+      from_secret: k8s-user
+    token:
+      from_secret: k8s-token
+  commands:
+    - drone-kube configToken  &gt;&gt; /dev/null
+    - kubectl delete -f deploy/deploy.yaml || true
+    - sleep 15
+    - kubectl create -f deploy/deploy.yaml || true</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
 </figure>
-这时系统会把 libcurl4-gnutls-dev 換成 libcurl4-openssl dev,接下来需要用户重新编译源码即可</p>
+
+<h3 id="部署文件模板渲染">部署文件模板渲染</h3>
+
+<div class="alert warning ">
+  <p><ol>
+<li>编写部署模板文件,必须以yaml.tmpl或者yml.tmpl为文件结尾。其中变量名称需要为TEMPLATE开头且必须为大写如TEMPLATE_TAG1。</li>
+<li>drone的脚本中变量名与模板文件中变量需要保持一致,大小写亦可。</li>
+<li>脚本drone-kube template &ndash;deploy=deploy为渲染模板命令,需要手动执行。其中deploy参数为存放模板文件的目录。</li>
+</ol>
+</p>
+</div>
 
 
   
@@ -340,20 +390,85 @@ sudo apt-get install libcurl4-openssl-dev</code></pre>
 <figure class="highlight  language-">
   <figcaption>
     
-      <span>bash</span>
+      <span>deploy.yaml.tmpl</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">make configure
-./configure  --prefix=/usr/local
-make all doc
-make install install-doc install-html</code></pre>
+          <pre class="code-highlight language-"><code class="">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.TEMPLATE_TAG1}}
+  labels:
+    app: {{.TEMPLATE_TAG1}}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: {{.TEMPLATE_TAG1}}
+      labels:
+        app: {{.TEMPLATE_TAG1}}
+    spec:
+      containers:
+        - name: {{.TEMPLATE_TAG1}}
+          image: {{.TEMPLATE_TAG2}}
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: {{.TEMPLATE_TAG1}}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>.drone.yml</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">- name: deploy-font
+  image: cuisongliu/drone-kube
+  settings:
+    server:
+      from_secret: k8s-server
+    ca:
+      from_secret: k8s-ca
+    admin:
+      from_secret: k8s-admin
+    admin_key:
+      from_secret: k8s-admin-key
+    template_tag1: alpine
+    template_tag2: ${DRONE_TAG=drone-test}
+  commands:
+    - drone-kube config
+    - drone-kube template --deploy=deploy &gt;&gt; /dev/null
+    - kubectl delete -f deploy/deploy.yaml || true
+    - sleep 15
+    - kubectl create -f deploy/deploy.yaml || true</code></pre>
         </td>
       </tr>
     </tbody>
@@ -370,9 +485,11 @@ make install install-doc install-html</code></pre>
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/git/">git</a>
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/kubernetes/">kubernetes</a>
 
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/https/">https</a>
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/drone/">drone</a>
+
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/devops/">devops</a>
 
                   </div>
                 
@@ -380,12 +497,12 @@ make install install-doc install-html</code></pre>
             
             <div class="post-actions-wrap">
   
-      <nav style="visibility: hidden">
+      <nav >
         <ul class="post-actions post-action-nav">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes-containerd/" data-tooltip="containerd与kubernetes集成">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -393,7 +510,7 @@ make install install-doc install-html</code></pre>
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/podset/" data-tooltip="Kubernetes实战之PodPreset">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -411,19 +528,19 @@ make install install-doc install-html</code></pre>
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -438,7 +555,7 @@ make install install-doc install-html</code></pre>
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -466,12 +583,12 @@ make install install-doc install-html</code></pre>
       <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
         <div class="post-actions-wrap">
   
-      <nav style="visibility: hidden">
+      <nav >
         <ul class="post-actions post-action-nav">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes-containerd/" data-tooltip="containerd与kubernetes集成">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -479,7 +596,7 @@ make install install-doc install-html</code></pre>
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/podset/" data-tooltip="Kubernetes实战之PodPreset">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -497,19 +614,19 @@ make install install-doc install-html</code></pre>
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/03/git-https/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://cuisongliu.github.io/2019/04/drone/k8s/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -524,7 +641,7 @@ make install install-doc install-html</code></pre>
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -539,19 +656,19 @@ make install install-doc install-html</code></pre>
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fgit-https%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F04%2Fdrone%2Fk8s%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fgit-https%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F04%2Fdrone%2Fk8s%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F03%2Fgit-https%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F04%2Fdrone%2Fk8s%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>
@@ -612,7 +729,41 @@ make install install-doc install-html</code></pre>
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/docker-lxcfs/">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/04/drone/k8s/">
+                <h3 class="media-heading">利用drone构建ci/cd系统，对接k8s</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>主要讲述如果使用github和drone进行代码环境下的ci/cd环境。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes/podset/">
+                <h3 class="media-heading">Kubernetes实战之PodPreset</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>本文主要讲解如何在kubernetes使用pod preset。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/docker/lxcfs/">
                 <h3 class="media-heading">利用LXCFS增强容器隔离性和资源可见性</h3>
               </a>
               <span class="media-meta">
@@ -629,7 +780,7 @@ make install install-doc install-html</code></pre>
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes-netbrige/">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes/netbrige/">
                 <h3 class="media-heading">多网卡配置安装kubeadm</h3>
               </a>
               <span class="media-meta">
@@ -646,7 +797,7 @@ make install install-doc install-html</code></pre>
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes-containerd/">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/kubernetes/containerd/">
                 <h3 class="media-heading">containerd与kubernetes集成</h3>
               </a>
               <span class="media-meta">
@@ -665,7 +816,7 @@ make install install-doc install-html</code></pre>
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/git-https/">
+              <a class="link-unstyled" href="https://cuisongliu.github.io/2019/03/git/https/">
                 <h3 class="media-heading">git连接https仓库</h3>
               </a>
               <span class="media-meta">
@@ -686,7 +837,7 @@ make install install-doc install-html</code></pre>
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         4 posts found
+         6 posts found
       </p>
     </div>
   </div>
@@ -745,9 +896,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/03\/git-https\/';
+          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/04\/drone\/k8s\/';
           
-            this.page.identifier = '\/2019\/03\/git-https\/'
+            this.page.identifier = '\/2019\/04\/drone\/k8s\/'
           
         };
         (function() {
