@@ -6,31 +6,13 @@
     <description>Recent content in Tags on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 22 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Cgroup</title>
-      <link>https://cuisongliu.github.io/tags/cgroup/</link>
-      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/cgroup/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Containerd</title>
-      <link>https://cuisongliu.github.io/tags/containerd/</link>
-      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/containerd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Devops</title>
+      <title>devops</title>
       <link>https://cuisongliu.github.io/tags/devops/</link>
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
@@ -39,16 +21,7 @@
     </item>
     
     <item>
-      <title>Docker</title>
-      <link>https://cuisongliu.github.io/tags/docker/</link>
-      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Drone</title>
+      <title>drone</title>
       <link>https://cuisongliu.github.io/tags/drone/</link>
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
@@ -57,34 +30,7 @@
     </item>
     
     <item>
-      <title>Git</title>
-      <link>https://cuisongliu.github.io/tags/git/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/git/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Https</title>
-      <link>https://cuisongliu.github.io/tags/https/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/https/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubeadm</title>
-      <link>https://cuisongliu.github.io/tags/kubeadm/</link>
-      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/kubeadm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
+      <title>kubernetes</title>
       <link>https://cuisongliu.github.io/tags/kubernetes/</link>
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
@@ -93,7 +39,34 @@
     </item>
     
     <item>
-      <title>Lxcfs</title>
+      <title>cgroup</title>
+      <link>https://cuisongliu.github.io/tags/cgroup/</link>
+      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/cgroup/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://cuisongliu.github.io/tags/docker/</link>
+      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubeadm</title>
+      <link>https://cuisongliu.github.io/tags/kubeadm/</link>
+      <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/kubeadm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lxcfs</title>
       <link>https://cuisongliu.github.io/tags/lxcfs/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
@@ -102,7 +75,7 @@
     </item>
     
     <item>
-      <title>Netbrige</title>
+      <title>netbrige</title>
       <link>https://cuisongliu.github.io/tags/netbrige/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
@@ -111,7 +84,7 @@
     </item>
     
     <item>
-      <title>Pod</title>
+      <title>pod</title>
       <link>https://cuisongliu.github.io/tags/pod/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
@@ -120,11 +93,38 @@
     </item>
     
     <item>
-      <title>Preset</title>
+      <title>preset</title>
       <link>https://cuisongliu.github.io/tags/preset/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/tags/preset/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>containerd</title>
+      <link>https://cuisongliu.github.io/tags/containerd/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/containerd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>git</title>
+      <link>https://cuisongliu.github.io/tags/git/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>https</title>
+      <link>https://cuisongliu.github.io/tags/https/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/https/</guid>
       <description></description>
     </item>
     
