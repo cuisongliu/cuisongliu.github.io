@@ -629,7 +629,7 @@ crictl  images
           <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">  Environment=&#34;KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock&#34;
+          <pre class="code-highlight language-"><code class="">  Environment=&#34;KUBELET_EXTRA_ARGS=--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock --image-service-endpoint=unix:///run/containerd/containerd.sock&#34;
     </code></pre>
         </td>
       </tr>
