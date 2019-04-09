@@ -6,10 +6,37 @@
     <description>Recent content in Tags on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 03 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>network</title>
+      <link>https://cuisongliu.github.io/tags/network/</link>
+      <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vmware</title>
+      <link>https://cuisongliu.github.io/tags/vmware/</link>
+      <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/vmware/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ipvs</title>
+      <link>https://cuisongliu.github.io/tags/ipvs/</link>
+      <pubDate>Mon, 08 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/ipvs/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>devops</title>
