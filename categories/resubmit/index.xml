@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>resubmit on cuisongliu 的个人博客</title>
+    <link>https://cuisongliu.github.io/categories/resubmit/</link>
+    <description>Recent content in resubmit on cuisongliu 的个人博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 11 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://cuisongliu.github.io/categories/resubmit/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>在springboot下利用aspect实现重复提交验证</title>
+      <link>https://cuisongliu.github.io/2019/05/springboot/resubmit/</link>
+      <pubDate>Sat, 11 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/05/springboot/resubmit/</guid>
+      <description>&lt;p&gt;本文主要说明使用aspect+redis实现重复提交的校验。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
