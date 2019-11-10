@@ -6,10 +6,19 @@
     <description>Recent content on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 12 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>github提交流程（未完成）</title>
+      <link>https://cuisongliu.github.io/2019/11/git/commit/</link>
+      <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/11/git/commit/</guid>
+      <description>&lt;p&gt;本文主要讲解如何使用github提交代码到开源仓库。以github比较有代表性来说明一下github的fork代码开发流程，同样适用于git相关的代码仓库例如gitlab或者gogs等相关的代码仓库。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>springboot获取req和rep</title>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>git on cuisongliu 的个人博客</title>
-    <link>https://cuisongliu.github.io/categories/git/</link>
-    <description>Recent content in git on cuisongliu 的个人博客</description>
+    <title>fork on cuisongliu 的个人博客</title>
+    <link>https://cuisongliu.github.io/tags/fork/</link>
+    <description>Recent content in fork on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://cuisongliu.github.io/categories/git/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://cuisongliu.github.io/tags/fork/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>https://cuisongliu.github.io/2019/11/git/commit/</guid>
       <description>&lt;p&gt;本文主要讲解如何使用github提交代码到开源仓库。以github比较有代表性来说明一下github的fork代码开发流程，同样适用于git相关的代码仓库例如gitlab或者gogs等相关的代码仓库。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>git连接https仓库</title>
-      <link>https://cuisongliu.github.io/2019/03/git/https/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/2019/03/git/https/</guid>
-      <description>&lt;p&gt;本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。&lt;/p&gt;</description>
     </item>
     
   </channel>
