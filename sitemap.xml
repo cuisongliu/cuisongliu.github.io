@@ -48,17 +48,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/request/</loc>
-    <lastmod>2019-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cuisongliu.github.io/categories/request/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/response/</loc>
+    <loc>https://cuisongliu.github.io/tags/request/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -68,12 +63,17 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/springboot/</loc>
+    <loc>https://cuisongliu.github.io/categories/response/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/tags/springboot/</loc>
+    <lastmod>2019-05-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/categories/springboot/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -118,22 +118,22 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/network/</loc>
-    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cuisongliu.github.io/tags/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/vmware/</loc>
+    <loc>https://cuisongliu.github.io/categories/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/tags/vmware/</loc>
+    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/categories/vmware/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
