@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.60.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.61.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
 <meta name="description" content="本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。">
@@ -244,20 +244,11 @@
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
               <p>本文主要讲解如何解决git连接https仓库出现报错的问题。该问题主要出现在Debian以及Ubuntu等操作系统中。</p>
-
-<h1 id="table-of-contents">目录</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#使用http克隆仓库">使用http克隆仓库</a></li>
-<li><a href="#使用git源码重新编译">使用git源码重新编译</a></li>
-</ul>
-</nav>
-
+<!-- raw HTML omitted -->
 <div class="alert warning ">
   <p>在Debian等操作系统使用git clone 经常出现<code>error: gnutls_handshake() failed: A TLS packet with unexpected length was received</code> 错误。</p>
 </div>
-
-<h1 id="使用http克隆仓库">使用http克隆仓库</h1>
-
+<h1 id="http">使用http克隆仓库</h1>
 
   
     
@@ -287,9 +278,7 @@ git clone http://github.com/cuisongliu/xxx</code></pre>
     </tbody>
   </table>
 </figure>
-
-<h1 id="使用git源码重新编译">使用git源码重新编译</h1>
-
+<h1 id="git">使用git源码重新编译</h1>
 <p>
   
     
@@ -321,7 +310,6 @@ sudo apt-get install libcurl4-openssl-dev</code></pre>
   </table>
 </figure>
 这时系统会把 libcurl4-gnutls-dev 換成 libcurl4-openssl dev,接下来需要用户重新编译源码即可</p>
-
 
   
     
@@ -426,7 +414,7 @@ make install install-doc install-html</code></pre>
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -506,7 +494,7 @@ make install install-doc install-html</code></pre>
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

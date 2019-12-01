@@ -6,10 +6,19 @@
     <description>Recent content on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>client-go原理</title>
+      <link>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</guid>
+      <description>&lt;p&gt;本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>github提交流程</title>
@@ -108,7 +117,7 @@
       
       <guid>https://cuisongliu.github.io/2019/03/kubernetes/containerd/</guid>
       <description>&lt;p&gt;本文主要讲解如何将kubernetes中的docker替换为containerd。并讲解关于容器相关的基础概念。
-以及相关部署配置说明。&lt;br/&gt;
+以及相关部署配置说明。&lt;!-- raw HTML omitted --&gt;
 由于docker嵌入了太多自身内容,为了减轻容器负担。此次选用containerd作为kubernetes的容器实现方案。本文将带大家讲述如何搭建一个集成了containerd的k8s集群。&lt;/p&gt;</description>
     </item>
     

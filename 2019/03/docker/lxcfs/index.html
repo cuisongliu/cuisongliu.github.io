@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.60.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.61.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
 <meta name="description" content="本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。">
@@ -246,28 +246,22 @@
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
               <p>本文主要讲解如何使用lxcfs增强容器的隔离性和可见性。并使用二进制部署包使用，减轻部署难度。可在离线环境中使用。</p>
-
 <blockquote>
 <p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
 </blockquote>
-
 <div class="alert info ">
   <p><p>基于LXCFS增强docker容器隔离性的分析
 <a href="https://blog.csdn.net/s1234567_89/article/details/50722915">https://blog.csdn.net/s1234567_89/article/details/50722915</a></p>
-
 <p>Kubernetes之路 2 - 利用LXCFS提升容器资源可见性
 <a href="https://yq.aliyun.com/articles/566208">https://yq.aliyun.com/articles/566208</a></p>
 </p>
 </div>
-
 <p>使用二进制lxcfs包进行安装部署，下载地址为：
 <a href="https://github.com/cuisongliu/lxcfs/releases/download/lxcfs-3.0.3-binary-install/lxcfs.tar.gz">https://github.com/cuisongliu/lxcfs/releases/download/lxcfs-3.0.3-binary-install/lxcfs.tar.gz</a>
 <div class="alert warning ">
   <p>确保系统中是否有fusermount命令,系统使用fusermount进行卸载挂载点。</p>
 </div></p>
-
 <p>安装如图：</p>
-
 
  
   
@@ -312,9 +306,7 @@
 
   <div style="clear:both;"></div>
 
-
 <p>操作是不是很easy?下面我们对比一下效果。</p>
-
 <p>首先是在没有安装lxcfs的主机上执行命令：
 
   
@@ -472,7 +464,6 @@ free -m</code></pre>
   <div style="clear:both;"></div>
 
 到这里lxcfs已经生效了。</p>
-
 <div class="alert success ">
   <p>这里讲解了docker的使用,对于k8s用户建议使用 <a href="https://github.com/fanux/kube/releases/tag/v.12.5-lxcfs-gate">https://github.com/fanux/kube/releases/tag/v.12.5-lxcfs-gate</a>
 替换k8s的kebelet即可。</p>

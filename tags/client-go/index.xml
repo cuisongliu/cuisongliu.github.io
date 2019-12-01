@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>client-go on cuisongliu 的个人博客</title>
+    <link>https://cuisongliu.github.io/tags/client-go/</link>
+    <description>Recent content in client-go on cuisongliu 的个人博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://cuisongliu.github.io/tags/client-go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>client-go原理</title>
+      <link>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</guid>
+      <description>&lt;p&gt;本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

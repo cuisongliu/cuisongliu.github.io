@@ -6,10 +6,28 @@
     <description>Recent content in Tags on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>client-go</title>
+      <link>https://cuisongliu.github.io/tags/client-go/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/client-go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://cuisongliu.github.io/tags/kubernetes/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>commit</title>
@@ -125,15 +143,6 @@
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/tags/drone/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://cuisongliu.github.io/tags/kubernetes/</link>
-      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
     

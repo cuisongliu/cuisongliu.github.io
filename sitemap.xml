@@ -4,16 +4,46 @@
   
   <url>
     <loc>https://cuisongliu.github.io/categories/</loc>
-    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/commit/</loc>
-    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+    <loc>https://cuisongliu.github.io/tags/client-go/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/post/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/</loc>
+    <lastmod>2019-12-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/commit/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
@@ -38,16 +68,6 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/post/</loc>
-    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuisongliu.github.io/tags/</loc>
-    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cuisongliu.github.io/categories/request/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
@@ -58,12 +78,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/response/</loc>
+    <loc>https://cuisongliu.github.io/tags/response/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/response/</loc>
+    <loc>https://cuisongliu.github.io/categories/response/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -88,12 +108,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/resubmit/</loc>
+    <loc>https://cuisongliu.github.io/tags/resubmit/</loc>
     <lastmod>2019-05-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/resubmit/</loc>
+    <loc>https://cuisongliu.github.io/categories/resubmit/</loc>
     <lastmod>2019-05-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -103,12 +123,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/redis/</loc>
+    <loc>https://cuisongliu.github.io/categories/redis/</loc>
     <lastmod>2019-05-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/redis/</loc>
+    <loc>https://cuisongliu.github.io/tags/redis/</loc>
     <lastmod>2019-05-10T00:00:00+00:00</lastmod>
   </url>
   
@@ -118,22 +138,22 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/network/</loc>
-    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cuisongliu.github.io/categories/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/vmware/</loc>
+    <loc>https://cuisongliu.github.io/tags/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/categories/vmware/</loc>
+    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/tags/vmware/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
@@ -169,16 +189,6 @@
   
   <url>
     <loc>https://cuisongliu.github.io/tags/drone/</loc>
-    <lastmod>2019-04-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
-    <lastmod>2019-04-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
     <lastmod>2019-04-03T00:00:00+00:00</lastmod>
   </url>
   

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.60.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.61.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
 <meta name="description" content="本文主要讲解如何修改多网卡配置安装kubeadm。">
@@ -246,11 +246,9 @@
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
               <p>本文主要讲解如何修改多网卡配置安装kubeadm。</p>
-
 <blockquote>
 <p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
 </blockquote>
-
 
   
     
@@ -293,7 +291,6 @@ localAPIEndpoint:
     </tbody>
   </table>
 </figure>
-
 <div class="alert warning ">
   <p>主要修改的参数就是InitConfiguration中的advertiseAddress为自己真实服务器的IP</p>
 </div>

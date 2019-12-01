@@ -6,10 +6,19 @@
     <description>Recent content in Categories on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://cuisongliu.github.io/categories/kubernetes/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/kubernetes/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>git</title>
@@ -107,15 +116,6 @@
       <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/categories/drone/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://cuisongliu.github.io/categories/kubernetes/</link>
-      <pubDate>Wed, 03 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://cuisongliu.github.io/categories/kubernetes/</guid>
       <description></description>
     </item>
     
