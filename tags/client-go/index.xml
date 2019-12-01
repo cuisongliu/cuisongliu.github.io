@@ -20,5 +20,14 @@
       <description>&lt;p&gt;本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>client-go深入实践</title>
+      <link>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/2019/12/kubernetes/client-go/</guid>
+      <description>&lt;p&gt;本文主要讲解kubernetes的client的深入了解，最佳实践等等。&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>
