@@ -8,30 +8,28 @@
 <meta name="generator" content="Hugo 0.61.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
-<meta name="description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
+<meta name="description" content="本文主要讲解kubernetes的client的深入了解，最佳实践等等。">
 
 
-<meta property="og:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
+<meta property="og:description" content="本文主要讲解kubernetes的client的深入了解，最佳实践等等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用drone构建ci/cd系统，对接k8s">
-<meta name="twitter:title" content="利用drone构建ci/cd系统，对接k8s">
-<meta property="og:url" content="https://cuisongliu.github.io/2019/04/drone/k8s/">
-<meta property="twitter:url" content="https://cuisongliu.github.io/2019/04/drone/k8s/">
+<meta property="og:title" content="client-go深入实践">
+<meta name="twitter:title" content="client-go深入实践">
+<meta property="og:url" content="https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
+<meta property="twitter:url" content="https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
 <meta property="og:site_name" content="cuisongliu 的个人博客">
-<meta property="og:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
-<meta name="twitter:description" content="主要讲述如果使用github和drone进行代码环境下的ci/cd环境。">
+<meta property="og:description" content="本文主要讲解kubernetes的client的深入了解，最佳实践等等。">
+<meta name="twitter:description" content="本文主要讲解kubernetes的client的深入了解，最佳实践等等。">
 <meta property="og:locale" content="zh-cn">
 
   
-    <meta property="article:published_time" content="2019-04-03T00:00:00">
+    <meta property="article:published_time" content="2019-12-01T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-04-03T00:00:00">
+    <meta property="article:modified_time" content="2019-12-01T00:00:00">
   
   
   
-    
-      <meta property="article:section" content="drone">
     
       <meta property="article:section" content="kubernetes">
     
@@ -40,9 +38,7 @@
     
       <meta property="article:tag" content="kubernetes">
     
-      <meta property="article:tag" content="drone">
-    
-      <meta property="article:tag" content="devops">
+      <meta property="article:tag" content="client-go">
     
   
 
@@ -63,14 +59,14 @@
   <meta property="twitter:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
 
 
-    <title>利用drone构建ci/cd系统，对接k8s</title>
+    <title>client-go深入实践</title>
 
     <link rel="icon" href="https://cuisongliu.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://cuisongliu.github.io/2019/04/drone/k8s/">
+    <link rel="canonical" href="https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -220,15 +216,15 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      利用drone构建ci/cd系统，对接k8s
+      client-go深入实践
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-04-03T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-12-01T00:00:00Z">
         
-  四月 3, 2019
+  十二月 1, 2019
 
       </time>
     
@@ -236,8 +232,6 @@
   
   
     <span>发布在</span>
-    
-      <a class="category-link" href="https://cuisongliu.github.io/categories/drone">drone</a>, 
     
       <a class="category-link" href="https://cuisongliu.github.io/categories/kubernetes">kubernetes</a>
     
@@ -249,25 +243,75 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>主要讲述如果使用github和drone进行代码环境下的ci/cd环境。</p>
+              <p>本文主要讲解kubernetes的client的深入了解，最佳实践等等。</p>
 <!-- raw HTML omitted -->
 <blockquote>
 <p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
 </blockquote>
-<div class="alert info ">
-  <p>基于drone构建CI/CD系统,对接k8s
-<a href="https://sealyun.com/post/ci-cd/">https://sealyun.com/post/ci-cd/</a></p>
-</div>
-<p>直接进入主题,主要使用<a href="https://github.com/cuisongliu/drone-kube">drone-kube</a>插件进行drone的k8s部署。
-该插件主要包括两大功能,初始化kubeconfig文件和渲染部署k8s相关文件。</p>
-<h1 id="kubeconfig">kubeconfig文件渲染</h1>
-<div class="alert warning ">
-  <p>使用命令模式drone-kube config进行kubeconfig文件渲染管理员文件,使用命令模式drone-kube configToken进行kubeconfig文件渲染用户token管理文件。</p>
-</div>
-<h2 id="heading">管理员模式</h2>
-<div class="alert info ">
-  <p>该模式为最常见的kubernetes-admin管理方式。</p>
-</div>
+<h1 id="how-to-access-a-kubernetes-cluster">How to access a kubernetes cluster</h1>
+<ul>
+<li>CLI: kubectl</li>
+<li>UI: dashboard</li>
+<li>Access rest api
+<ul>
+<li>kubectl proxy ; curl localhost:8001/api/v1/namespaces/pods</li>
+</ul>
+</li>
+<li>Programmatic access
+<ul>
+<li>client-go</li>
+<li>other clients (open api)
+<ul>
+<li>java</li>
+<li>python</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="contents-of-client-go">Contents of client-go</h1>
+<ul>
+<li>Different client
+<ul>
+<li>clientset
+<ul>
+<li>config
+<ul>
+<li>out of cluster
+<ul>
+<li>kube-config</li>
+<li>auth plugin(cloud)</li>
+</ul>
+</li>
+<li>in cluster
+<ul>
+<li>rest.InClusterConfig()   (serviceaccount)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>use:
+<ul>
+<li>clientset.Core(&ldquo;namespace&rdquo;).Pods().Create(pod)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>dynamic client</li>
+<li>restclient</li>
+</ul>
+</li>
+<li>writing controllers
+<ul>
+<li>workqueue</li>
+<li>informer</li>
+</ul>
+</li>
+</ul>
+<h1 id="clients">Clients</h1>
+<h2 id="clientset">Clientset</h2>
+<h3 id="get">Get</h3>
+<p><img src="https://cuisongliu.github.io/img/client-go/get.png" alt="get">
 
   
     
@@ -280,41 +324,38 @@
 <figure class="highlight  language-">
   <figcaption>
     
-      <span>.drone.yml</span>
+      <span>go</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">- name: deploy-font
-  image: cuisongliu/drone-kube
-  settings:
-    server:
-      from_secret: k8s-server
-    ca:
-      from_secret: k8s-ca
-    admin:
-      from_secret: k8s-admin
-    admin_key:
-      from_secret: k8s-admin-key
-  commands:
-    - drone-kube config  &gt;&gt; /dev/null
-    - kubectl delete -f deploy/deploy.yaml || true
-    - sleep 15
-    - kubectl create -f deploy/deploy.yaml || true</code></pre>
+          <pre class="code-highlight language-"><code class="">type GetOptions struct {	
+	// - if unset, then the result is returned from remote storage based on quorum-read flag;
+	// - if it&#39;s 0, then we simply return what we currently have in cache, no guarantee;
+	// - if set to non zero, then the result is at least as fresh as given rv.
+	ResourceVersion string 	
+}</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
-</figure>
-<h2 id="heading-1">多租户模式</h2>
-<div class="alert info ">
-  <p>该模式为kubernetes下发user-token的模式。</p>
-</div>
+</figure></p>
+<h3 id="list">List</h3>
+<p><img src="https://cuisongliu.github.io/img/client-go/get.png" alt="list"></p>
+<ul>
+<li>ListOptions.ResourceVersion has the same meaning as GetOptions.ResourceVersion</li>
+<li>Informer uses it</li>
+</ul>
+<h3 id="watch">Watch</h3>
+<ul>
+<li>starts watching from opt.ResourceVersion</li>
+<li>best practice: always set the ResourceVersion</li>
+<li>api server will time out a watch   5-10 min
 
   
     
@@ -327,138 +368,86 @@
 <figure class="highlight  language-">
   <figcaption>
     
-      <span>.drone.yml</span>
+      <span>go</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-"><code class="">- name: deploy-font
-  image: cuisongliu/drone-kube
-  settings:
-    server:
-      from_secret: k8s-server
-    user:
-      from_secret: k8s-user
-    token:
-      from_secret: k8s-token
-  commands:
-    - drone-kube configToken  &gt;&gt; /dev/null
-    - kubectl delete -f deploy/deploy.yaml || true
-    - sleep 15
-    - kubectl create -f deploy/deploy.yaml || true</code></pre>
+          <pre class="code-highlight language-"><code class="">options :=api.ListOptions{ResourceVersion:&#34;0&#34;}
+list,err :=r.listerWatcher.List(options)
+resourceVersion = listMetaInterface.GetResourceVersion()
+options = api.ListOptions{
+   ResourceVersion : resourceVersion,
+}
+w,err :=r.listerWatcher.Watch(options)</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
-</figure>
-<h1 id="heading-2">部署文件模板渲染</h1>
-<div class="alert warning ">
-  <p><ol>
-<li>编写部署模板文件,必须以yaml.tmpl或者yml.tmpl为文件结尾。其中变量名称需要为TEMPLATE开头且必须为大写如TEMPLATE_TAG1。</li>
-<li>drone的脚本中变量名与模板文件中变量需要保持一致,大小写亦可。</li>
-<li>脚本drone-kube template &ndash;deploy=deploy为渲染模板命令,需要手动执行。其中deploy参数为存放模板文件的目录。</li>
-</ol></p>
-</div>
-
-  
-    
-  
-  
-  
-  
-
-
-<figure class="highlight  language-">
-  <figcaption>
-    
-      <span>deploy.yaml.tmpl</span>
-    
-  </figcaption>
-  <table>
-    <tbody>
-      <tr>
-        <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre>
-        </td>
-        <td class="code">
-          <pre class="code-highlight language-"><code class="">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.TEMPLATE_TAG1}}
-  labels:
-    app: {{.TEMPLATE_TAG1}}
-spec:
-  replicas: 1
-  template:
-    metadata:
-      name: {{.TEMPLATE_TAG1}}
-      labels:
-        app: {{.TEMPLATE_TAG1}}
-    spec:
-      containers:
-        - name: {{.TEMPLATE_TAG1}}
-          image: {{.TEMPLATE_TAG2}}
-          imagePullPolicy: IfNotPresent
-      restartPolicy: Always
-  selector:
-    matchLabels:
-      app: {{.TEMPLATE_TAG1}}</code></pre>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</figure>
-
-  
-    
-  
-  
-  
-  
-
-
-<figure class="highlight  language-">
-  <figcaption>
-    
-      <span>.drone.yml</span>
-    
-  </figcaption>
-  <table>
-    <tbody>
-      <tr>
-        <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre>
-        </td>
-        <td class="code">
-          <pre class="code-highlight language-"><code class="">- name: deploy-font
-  image: cuisongliu/drone-kube
-  settings:
-    server:
-      from_secret: k8s-server
-    ca:
-      from_secret: k8s-ca
-    admin:
-      from_secret: k8s-admin
-    admin_key:
-      from_secret: k8s-admin-key
-    template_tag1: alpine
-    template_tag2: ${DRONE_TAG=drone-test}
-  commands:
-    - drone-kube config
-    - drone-kube template --deploy=deploy &gt;&gt; /dev/null
-    - kubectl delete -f deploy/deploy.yaml || true
-    - sleep 15
-    - kubectl create -f deploy/deploy.yaml || true</code></pre>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</figure>
+</figure></li>
+</ul>
+<h3 id="update-----updatestatus">Update  &amp;&amp;   UpdateStatus</h3>
+<ul>
+<li>optimistic concurrency via cap (compare and swap)</li>
+</ul>
+<h3 id="patch">Patch</h3>
+<ul>
+<li>merge</li>
+<li>safe for unknown fields</li>
+<li>retry 5 times at server</li>
+<li>best practice: always set the origina uid in the patch
+<ul>
+<li>namespace+name is not unique across time</li>
+</ul>
+</li>
+</ul>
+<h3 id="delete">Delete</h3>
+<ul>
+<li>DeleteOptions.Preconditions
+<ul>
+<li>uid : namespace+name is not unique across time</li>
+</ul>
+</li>
+<li>DeleteOptions.PropagationPolicy
+<ul>
+<li>Orphan : not delete dependents resource,only delete current controller.</li>
+<li>Background: delete current controller,other dependents resource gc delete.</li>
+<li>Foreground: delete current controller must be delete dependents resource.</li>
+</ul>
+</li>
+</ul>
+<h2 id="dynamic-client">Dynamic client</h2>
+<ul>
+<li>example
+<ul>
+<li>ret,err:=client.Reource(resource,namespace).Get(name)</li>
+<li>ret is of type map[string]interface{}</li>
+<li>structured access to ObjectMet, e.g., ret.GetUID()</li>
+</ul>
+</li>
+<li>used extensively in pkg/controller/&lt;namespace,garbagecontrollector&gt;</li>
+<li>crd</li>
+<li>only support json, json &lt; protobuf</li>
+</ul>
+<h2 id="restclient">RESTClient</h2>
+<ul>
+<li>example
+<ul>
+<li>var ret v1.Pod
+err:= c.rest.Get().Resource(&ldquo;pods&rdquo;).Namespace(namespace).Do().Into(&amp;ret)</li>
+<li>ret is typed</li>
+<li>DoRaw() return byte[]</li>
+</ul>
+</li>
+<li>base of clientset and dynamic client</li>
+<li>supports json and proto</li>
+<li>need to satisfy the api machinery</li>
+</ul>
               
             </div>
           </div>
@@ -472,9 +461,7 @@ spec:
                     
   <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/kubernetes/">kubernetes</a>
 
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/drone/">drone</a>
-
-  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/devops/">devops</a>
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/client-go/">client-go</a>
 
                   </div>
                 
@@ -482,12 +469,12 @@ spec:
             
             <div class="post-actions-wrap">
   
-      <nav >
+      <nav style="visibility: hidden">
         <ul class="post-actions post-action-nav">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/04/ipvs/" data-tooltip="ipvs永久开启方案">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/12/kubernetes/client-go-1/" data-tooltip="client-go原理">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -495,7 +482,7 @@ spec:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/podset/" data-tooltip="Kubernetes实战之PodPreset">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/11/git/commit/" data-tooltip="github提交流程">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -513,13 +500,13 @@ spec:
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/04/drone/k8s/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/04/drone/k8s/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -562,12 +549,12 @@ spec:
       <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
         <div class="post-actions-wrap">
   
-      <nav >
+      <nav style="visibility: hidden">
         <ul class="post-actions post-action-nav">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/04/ipvs/" data-tooltip="ipvs永久开启方案">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/12/kubernetes/client-go-1/" data-tooltip="client-go原理">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -575,7 +562,7 @@ spec:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/03/kubernetes/podset/" data-tooltip="Kubernetes实战之PodPreset">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/11/git/commit/" data-tooltip="github提交流程">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -593,13 +580,13 @@ spec:
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/04/drone/k8s/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/04/drone/k8s/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2019/12/kubernetes/client-go-2/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -629,13 +616,13 @@ spec:
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F04%2Fdrone%2Fk8s%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F12%2Fkubernetes%2Fclient-go-2%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F04%2Fdrone%2Fk8s%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2019%2F12%2Fkubernetes%2Fclient-go-2%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
@@ -731,9 +718,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/04\/drone\/k8s\/';
+          this.page.url = 'https:\/\/cuisongliu.github.io\/2019\/12\/kubernetes\/client-go-2\/';
           
-            this.page.identifier = '\/2019\/04\/drone\/k8s\/'
+            this.page.identifier = '\/2019\/12\/kubernetes\/client-go-2\/'
           
         };
         (function() {

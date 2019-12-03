@@ -300,14 +300,14 @@
 <p><img src="https://cuisongliu.github.io/img/k8s-containerd/kubelet.png" alt="kubelet"></p>
 </li>
 </ul>
-<h1 id="heading1">环境准备</h1>
+<h1 id="heading-1">环境准备</h1>
 <p>下载containerd二进制包。我这里已经编译并打包了好了，内含containerd、runc、crictl、ctr等。</p>
 <p>下载链接：<a href="https://github.com/cuisongliu/containerd-dist/releases/download/v1.2.4/containerd-v1.2.4.tar.gz">containerd-v1.2.4.tar.gz</a></p>
 <ul>
 <li>runc版本：  1.0.1-dev</li>
 <li>containerd版本： v1.2.4</li>
 </ul>
-<h1 id="heading2">安装</h1>
+<h1 id="heading-2">安装</h1>
 <h2 id="containerd">安装containerd</h2>
 <ul>
 <li>
@@ -546,7 +546,7 @@ crictl  images
 <p>到此我们的cri + containerd已经完成整合了。下一步我们需要修改kubeadm配置进行安装。</p>
 </li>
 </ul>
-<h2 id="containerd1">containerd部署脚本</h2>
+<h2 id="containerd-1">containerd部署脚本</h2>
 <div class="alert success ">
   <p>到此我特意重新整理了部署脚本,包括containerd,ctr,circtl等配置。具体详细配置请移步<a href="https://github.com/cuisongliu/containerd-dist">containerd-dist</a></p>
 </div>
