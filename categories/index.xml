@@ -6,17 +6,53 @@
     <description>Recent content in Categories on cuisongliu 的个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 07 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cuisongliu.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>admission</title>
+      <link>https://cuisongliu.github.io/categories/admission/</link>
+      <pubDate>Sat, 07 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/admission/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>kubernetes</title>
       <link>https://cuisongliu.github.io/categories/kubernetes/</link>
-      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 07 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/categories/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>webhook</title>
+      <link>https://cuisongliu.github.io/categories/webhook/</link>
+      <pubDate>Sat, 07 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/webhook/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>controller</title>
+      <link>https://cuisongliu.github.io/categories/controller/</link>
+      <pubDate>Fri, 06 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/controller/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>client-go</title>
+      <link>https://cuisongliu.github.io/categories/client-go/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/client-go/</guid>
       <description></description>
     </item>
     
@@ -125,6 +161,15 @@
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/categories/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>containerd</title>
+      <link>https://cuisongliu.github.io/categories/containerd/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://cuisongliu.github.io/categories/containerd/</guid>
       <description></description>
     </item>
     
