@@ -28,12 +28,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
+    <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
     <lastmod>2019-12-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/kubernetes/</loc>
+    <loc>https://cuisongliu.github.io/categories/kubernetes/</loc>
     <lastmod>2019-12-01T00:00:00+00:00</lastmod>
   </url>
   
@@ -93,12 +93,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/springboot/</loc>
+    <loc>https://cuisongliu.github.io/tags/springboot/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/springboot/</loc>
+    <loc>https://cuisongliu.github.io/categories/springboot/</loc>
     <lastmod>2019-05-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -113,12 +113,12 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/resubmit/</loc>
+    <loc>https://cuisongliu.github.io/tags/resubmit/</loc>
     <lastmod>2019-05-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/tags/resubmit/</loc>
+    <loc>https://cuisongliu.github.io/categories/resubmit/</loc>
     <lastmod>2019-05-11T00:00:00+00:00</lastmod>
   </url>
   
@@ -143,22 +143,22 @@
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/network/</loc>
-    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cuisongliu.github.io/tags/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://cuisongliu.github.io/categories/vmware/</loc>
+    <loc>https://cuisongliu.github.io/categories/network/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://cuisongliu.github.io/tags/vmware/</loc>
+    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cuisongliu.github.io/categories/vmware/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.61.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.67.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
 <meta name="description" content="本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。">
@@ -248,7 +248,7 @@
 <blockquote>
 <p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
 </blockquote>
-<h1 id="client-go">client-go原理</h1>
+<h1 id="client-go原理">client-go原理</h1>
 <p><img src="https://cuisongliu.github.io/img/client-go/640.webp" alt="client"></p>
 <ol>
 <li>Controller 使用 informer 来 list/watch apiserver，然后将资源存储于本地的 cache 中。</li>
@@ -264,16 +264,16 @@
 <p>Dynamic client 是一种动态的 client，它能同时处理 kubernetes 所有的资源。并且同时，它也不同于 clientset，dynamic client 返回的对象是一个 map[string]interface{}，如果一个 controller 中需要控制所有的 API，可以使用dynamic client，目前它被用在了 garbage collector 和 namespace controller。</p>
 <h2 id="restclient">RESTClient</h2>
 <p>RESTClient 是 clientset 和 dynamic client 的基础，前面这两个 client 本质上都是RESTClient，它提供了一些 RESTful 的函数如 Get()，Put()，Post()，Delete()。由 Codec 来提供序列化和反序列化的功能。</p>
-<h2 id="-client-">如何选择 Client 的类型呢?</h2>
+<h2 id="如何选择-client-的类型呢">如何选择 Client 的类型呢?</h2>
 <div class="alert success ">
   <p><p>如果你的 Controller 只是需要控制 Kubernetes 原生的资源，如 Pods，Nodes，Deployments等，那么 clientset 就够用了。</p>
 <p>如果你需要使用 crd 来拓展 Kubernetes 的 API，那么需要使用 Dynamic Client 或 RESTClient。</p>
 <p>需要注意的是，Dynamic Client 目前只支持 JSON 的序列化和反序列化。</p>
 </p>
 </div>
-<h1 id="heading">常用组件介绍</h1>
+<h1 id="常用组件介绍">常用组件介绍</h1>
 <h2 id="informer">Informer</h2>
-<h3 id="heading-1">最佳实践</h3>
+<h3 id="最佳实践">最佳实践</h3>
 <ul>
 <li>等待所有的 cache 同步完成: 这是为了避免生成大量无用的资源，比如 replica set controller 需要watch replica sets 和 pods, 在 cache 还没有同步完之前，controller 可能为一个 replica set 创建了大量重复的 pods，因为这个时候 controller 觉得目前还没有任何的 pods。</li>
 <li>修改 resource 对象前先 deepcopy 一份: 在 Informer 这个模型中，我们的 resource 一般是从本地 cache 中取出的，而本地的 cache 对于用户来说应该是 read-only 的，因为它可能是与其他的 informer 共享的，如果你直接修改 cache 中的对象，可能会引起读写的竞争。</li>
@@ -282,7 +282,7 @@
 <li>在创建事件中注意 Object 已经被删除的情况: 在 Controller 重启的过程中，可能会有一些对象被删除了，重启后，Controller 会收到这些已删除对象的创建事件，请把这些对象正确地删除。</li>
 <li>SharedInformer: 建议使用 SharedInformer, 它会在多个 Informer 中共享一个本地 cache，这里有一 个 factory 来方便你编写一个新的 Informer。</li>
 </ul>
-<h3 id="informer-1">简化informer构建</h3>
+<h3 id="简化informer构建">简化informer构建</h3>
 <p>在 client-go 中提供了一个 SharedInformerFactory 来简化 informer 的构建，具体代码在：<a href="https://github.com/kubernetes/client-go/blob/v3.0.0/informers/factory.go#L54">factory.go</a></p>
 <h2 id="lister">Lister</h2>
 <p>Lister 是用来帮助我们访问本地 cache 的一个组件。</p>
@@ -300,7 +300,7 @@
 </ol>
 <p><strong>Workqueue helper</strong>:</p>
 <p>这里有一个 workqueue 的封装，来简化 queue 的操作，代码在以下位置：<a href="https://github.com/caicloud/loadbalancer-controller/blob/master/pkg/util/controller/helper.go">helper.go</a></p>
-<h1 id="heading-2">控制流总结</h1>
+<h1 id="控制流总结">控制流总结</h1>
 <blockquote>
 <p>我们来总结一个控制器的整体工作流程。</p>
 </blockquote>
@@ -337,7 +337,7 @@
 </ul>
 </li>
 </ol>
-<h1 id="heading-3">设计原则</h1>
+<h1 id="设计原则">设计原则</h1>
 <ul>
 <li>功能设计基于 level_based，这意味系统应该在给定的 desired state 和 current/observed state 情况下也能正确运行，不管这中间有多少更新的信息被丢失了。Edge-triggered 只能用来进行优化（应该有一个类似于 CAP 的理论去指导我们权衡应该轮询还是使用事件驱动的方式去控制我们的流程，在高性能，可靠性和简单些三者之间选其二）。</li>
 <li>假定我们的系统是一个开放的环境：应该不断的去验证系统假设，优雅地接受外部的事件和修改。比如用户可以随意地删除正在被 replica set 管理的 pods，而 replica set 发现了之后只是简单的重新创建一个新的pod 而已。</li>
@@ -346,7 +346,7 @@
 <li>系统组件能够自愈：比如说 cache 需要定期的进行同步，这样如果有一些 object 被错误的修改或者存储了， 删除的事件被丢失等问题能够在人类发现之前被自动修复。</li>
 <li>优雅地进行降级和熔断，优先满足最重要的功能而忽略一些无关紧要的小错误。</li>
 </ul>
-<h1 id="kubernetes-api">Kubernetes API 习俗</h1>
+<h1 id="kubernetes-api习俗">Kubernetes API 习俗</h1>
 <h2 id="spec-and-status">Spec and status</h2>
 <ul>
 <li>Spec 表示系统希望到达的状态，Status 表示系统目前观测到的状态。</li>
@@ -365,7 +365,7 @@
 <li>谨慎地使用 bool 类型的字段，很多时候刚开始做 API 的时候是 true or false，但是随着系统的扩张，它可能 有多个可选值，多为未来打算。</li>
 <li>对于可选的字段，使用指针来表示，比如 *string *int32 , 这样就可以用 nil 来判断这个值是否设置了， 因为 Go 语言中string int 这些类型都有零值，你无法判断他们是没被设置还是被设置了零值。</li>
 </ul>
-<h1 id="heading-4">总结</h1>
+<h1 id="总结">总结</h1>
 <p>为 Kubernetes 拓展一个功能，实现一个 controller 是简单的。</p>
 <p>但是设计一个系统，抽象出其中的设计哲学，更加值得我们学习和深思。</p>
 <p>下面这个项目可以视为 controller 的一个例子： <a href="https://github.com/caicloud/loadbalancer-controller">loadbalancer-controller</a></p>
@@ -462,7 +462,7 @@
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2019 <a href="https://github.com/cuisongliu">cuisongliu</a>. All Rights Reserved
+    &copy; 2020 <a href="https://github.com/cuisongliu">cuisongliu</a>. All Rights Reserved
   </span>
 </footer>
 
