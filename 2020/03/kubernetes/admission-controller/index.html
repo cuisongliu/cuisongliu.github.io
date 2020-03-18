@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.67.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.68.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
-<meta name="description" content="本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。">
+<meta name="description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
 
 
-<meta property="og:description" content="本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。">
+<meta property="og:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kubernetes 之 admission controller原理 (未完成)">
 <meta name="twitter:title" content="kubernetes 之 admission controller原理 (未完成)">
 <meta property="og:url" content="https://cuisongliu.github.io/2020/03/kubernetes/admission-controller/">
 <meta property="twitter:url" content="https://cuisongliu.github.io/2020/03/kubernetes/admission-controller/">
 <meta property="og:site_name" content="cuisongliu 的个人博客">
-<meta property="og:description" content="本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。">
-<meta name="twitter:description" content="本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。">
+<meta property="og:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
+<meta name="twitter:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
 <meta property="og:locale" content="zh-cn">
 
   
@@ -251,11 +251,174 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。</p>
+              <p>本文主要讲解kubernetes的admission controller调用过程，以及原理设计。</p>
 <!-- raw HTML omitted -->
 <blockquote>
 <p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
 </blockquote>
+<p>
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure right" >
+  
+    <a class="fancybox" href="https://cuisongliu.github.io/img/admission-controller/0apiserver.png" title="APIServer工作组件" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://cuisongliu.github.io/img/admission-controller/0apiserver.png"  alt="APIServer工作组件">
+  
+    </a>
+  
+   
+    <span class="caption">APIServer工作组件</span>
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+<div class="alert info ">
+  <p>APIServer其实最重要的三件事情就是：</p>
+<ul>
+<li>认证: 用户是否合法</li>
+<li>授权: 用户拥有哪些权限</li>
+<li>准入控制: 一个调用链，对请求进行修改或拒绝</li>
+</ul></p>
+</div></p>
+<p>这个准入控制器是十分有用的，也是kubernetes一种比较常见的扩展方式。现在，我们将详细的介绍一下这个admission controller。</p>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>plugins.go</span><a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/plugins.go#L129" target="_blank" rel="external">plugins.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">// 默认关闭的plugin
+func DefaultOffAdmissionPlugins() sets.String {
+	//定义默认开启的插件
+	defaultOnPlugins := sets.NewString(
+		lifecycle.PluginName,                //NamespaceLifecycle
+		limitranger.PluginName,              //LimitRanger
+		serviceaccount.PluginName,           //ServiceAccount
+		setdefault.PluginName,               //DefaultStorageClass
+		resize.PluginName,                   //PersistentVolumeClaimResize
+		defaulttolerationseconds.PluginName, //DefaultTolerationSeconds
+		mutatingwebhook.PluginName,          //MutatingAdmissionWebhook
+		validatingwebhook.PluginName,        //ValidatingAdmissionWebhook
+		resourcequota.PluginName,            //ResourceQuota
+	)
+	//根据feature是否支持，来决定plugin是否启用
+	if utilfeature.DefaultFeatureGate.Enabled(features.PodPriority) {
+		defaultOnPlugins.Insert(podpriority.PluginName) //PodPriority
+	}
+	if utilfeature.DefaultFeatureGate.Enabled(features.TaintNodesByCondition) {
+		defaultOnPlugins.Insert(nodetaint.PluginName) //TaintNodesByCondition
+	}
+	//排除所有的默认开启插件，其余的为默认关闭插件
+	return sets.NewString(AllOrderedPlugins...).Difference(defaultOnPlugins)
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p>这里看到默认开启的admission controller:</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">NamespaceLifecycle</td>
+<td>确保处于termination状态的namespace不再接收任何新对象的请求，并拒绝请求不存在的namespace。</td>
+</tr>
+<tr>
+<td align="center">LimitRanger</td>
+<td>在多租户配额时相当有用，如果pod没配额，那么我可以默认给个很低的配额</td>
+</tr>
+<tr>
+<td align="center">ServiceAccount</td>
+<td>在pod没有设置serviceAccount属性时,将这个pod的sa设置为&quot;default&rdquo;;在安全环境下使用，因为default这个sa的权限是admin权限。</td>
+</tr>
+<tr>
+<td align="center">DefaultStorageClass</td>
+<td>默认存储类型</td>
+</tr>
+<tr>
+<td align="center">PersistentVolumeClaimResize</td>
+<td>检查传入的 PersistentVolumeClaim 调整大小请求，对其执行额外的验证操作。（注意：对调整卷大小的支持是一种 Alpha 特性。管理员必须将特性门控 ExpandPersistentVolumes 设置为 true 才能启用调整大小。）</td>
+</tr>
+<tr>
+<td align="center">DefaultTolerationSeconds</td>
+<td>设置POD的默认forgiveness toleration为5分钟。</td>
+</tr>
+<tr>
+<td align="center">MutatingAdmissionWebhook</td>
+<td>变更准入控制webhook</td>
+</tr>
+<tr>
+<td align="center">ValidatingAdmissionWebhook</td>
+<td>验证准入控制webhook</td>
+</tr>
+<tr>
+<td align="center">ResourceQuota</td>
+<td>多租户配额时比较重要，看资源是否满足resource quota中的配置</td>
+</tr>
+</tbody>
+</table>
+<p><div class="alert warning ">
+  <p>这里有两个比较特殊的控制器:MutatingAdmissionWebhook 和 ValidatingAdmissionWebhook。</p>
+</div>
+<div class="alert success ">
+  <p>这两个控制器将发送准入请求到外部的 HTTP 回调服务并接收一个准入响应。如果启用了这两个准入控制器，Kubernetes 管理员可以在集群中创建和配置一个 admission webhook。</p>
+</div></p>
               
             </div>
           </div>

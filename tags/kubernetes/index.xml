@@ -26,7 +26,7 @@
       <pubDate>Fri, 06 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://cuisongliu.github.io/2020/03/kubernetes/admission-controller/</guid>
-      <description>&lt;p&gt;本文主要讲解kubernetes的调用过程，以及kubernetes的api设计。&lt;/p&gt;</description>
+      <description>&lt;p&gt;本文主要讲解kubernetes的admission controller调用过程，以及原理设计。&lt;/p&gt;</description>
     </item>
     
     <item>
