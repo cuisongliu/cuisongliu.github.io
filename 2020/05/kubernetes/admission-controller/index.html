@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.71.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="cuisongliu">
+<meta name="keywords" content=", development, kubenetes">
+<meta name="description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
+
+
+<meta property="og:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes 之 admission controller原理">
+<meta name="twitter:title" content="kubernetes 之 admission controller原理">
+<meta property="og:url" content="https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+<meta property="twitter:url" content="https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+<meta property="og:site_name" content="cuisongliu 的个人博客">
+<meta property="og:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
+<meta name="twitter:description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
+<meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2020-05-10T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2020-05-10T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="kubernetes">
+    
+      <meta property="article:section" content="admission">
+    
+      <meta property="article:section" content="controller">
+    
+  
+  
+    
+      <meta property="article:tag" content="kubernetes">
+    
+      <meta property="article:tag" content="admission-controller">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=640">
+
+
+    <title>kubernetes 之 admission controller原理</title>
+
+    <link rel="icon" href="https://cuisongliu.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://cuisongliu.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://cuisongliu.github.io/">cuisongliu 的个人博客</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://cuisongliu.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=90" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://cuisongliu.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=110" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">cuisongliu</h4>
+        
+          <h5 class="sidebar-profile-bio">疯狂源于梦想,技术成就辉煌。</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/cuisongliu" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://cuisongliu.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      kubernetes 之 admission controller原理
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-05-10T00:00:00Z">
+        
+  五月 10, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://cuisongliu.github.io/categories/kubernetes">kubernetes</a>, 
+    
+      <a class="category-link" href="https://cuisongliu.github.io/categories/admission">admission</a>, 
+    
+      <a class="category-link" href="https://cuisongliu.github.io/categories/controller">controller</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>本文主要讲解kubernetes的admission controller调用过程，以及原理设计。</p>
+<!-- raw HTML omitted -->
+<blockquote>
+<p><a href="https://sealyun.com/pro/products/">kubernetes集群三步安装</a></p>
+</blockquote>
+<p>
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure right" >
+  
+    <a class="fancybox" href="https://cuisongliu.github.io/img/admission-controller/0apiserver.png" title="APIServer工作组件" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://cuisongliu.github.io/img/admission-controller/0apiserver.png"  alt="APIServer工作组件">
+  
+    </a>
+  
+   
+    <span class="caption">APIServer工作组件</span>
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+<div class="alert info ">
+  <p><p>APIServer其实最重要的三件事情就是：</p>
+<ul>
+<li>认证: 用户是否合法</li>
+<li>授权: 用户拥有哪些权限</li>
+<li>准入控制: 一个调用链，对请求进行修改或拒绝</li>
+</ul>
+</p>
+</div></p>
+<p>这个准入控制器是十分有用的，也是kubernetes一种比较常见的扩展方式。现在，我们将详细的介绍一下这个admission controller。</p>
+<h3 id="admission-controller支持参数说明">admission controller支持参数说明</h3>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>admission.go</span><a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/admission.go" target="_blank" rel="external">admission.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">type AdmissionOptions struct {
+	// GenericAdmission holds the generic admission options.
+	// 当前版本的plugin注册方式,支持--enable-admission-plugins 和 --disable-admission-plugins参数进行插件的启用和禁用方式
+	GenericAdmission *genericoptions.AdmissionOptions
+	// DEPRECATED flag, should use EnabledAdmissionPlugins and DisabledAdmissionPlugins.
+	// They are mutually exclusive, specify both will lead to an error.
+	//为了向下兼容低版本的plugin注册方式，低版本使用admission-control参数来启用哪些插件
+	PluginNames []string
+}
+
+// NewAdmissionOptions creates a new instance of AdmissionOptions
+// Note:
+//  In addition it calls RegisterAllAdmissionPlugins to register
+//  all kube-apiserver admission plugins.
+//
+//  Provides the list of RecommendedPluginOrder that holds sane values
+//  that can be used by servers that don&#39;t care about admission chain.
+//  Servers that do care can overwrite/append that field after creation.
+func NewAdmissionOptions() *AdmissionOptions {
+	options := genericoptions.NewAdmissionOptions()
+	// register all admission plugins
+	//获取所有的插件信息
+	RegisterAllAdmissionPlugins(options.Plugins)
+	// set RecommendedPluginOrder
+	//对所有的插件进行排序
+	options.RecommendedPluginOrder = AllOrderedPlugins
+	// set DefaultOffPlugins
+	//设置默认的停用插件
+	options.DefaultOffPlugins = DefaultOffAdmissionPlugins()
+
+	return &amp;AdmissionOptions{
+		GenericAdmission: options,
+	}
+}
+
+// Validate verifies flags passed to kube-apiserver AdmissionOptions.
+// Kube-apiserver verifies PluginNames and then call generic AdmissionOptions.Validate.
+// 验证--enable-admission-plugins 、 --disable-admission-plugins 和 admission-control 参数的有效性
+func (a *AdmissionOptions) Validate() []error {
+	...   //省略具体代码
+}
+
+// ApplyTo adds the admission chain to the server configuration.
+// Kube-apiserver just call generic AdmissionOptions.ApplyTo.
+// 注册admission到etcd中去
+func (a *AdmissionOptions) ApplyTo(
+	c *server.Config,
+	informers informers.SharedInformerFactory,
+	kubeAPIServerClientConfig *rest.Config,
+	pluginInitializers ...admission.PluginInitializer,
+) error {
+	...  //省略具体代码
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<ul>
+<li>AdmissionOptions 是数据结构并同时支持低版本的参数传入</li>
+<li>NewAdmissionOptions 进行插件注册、排序、将默认关闭的插件禁用。</li>
+<li>Validate 对参数&ndash;enable-admission-plugins 、 &ndash;disable-admission-plugins 和 admission-control 验证有效性。</li>
+<li>ApplyTo把对应的参数配置信息写入到etcd中去</li>
+</ul>
+<h3 id="admission-controller插件相关逻辑">admission controller插件相关逻辑</h3>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>plugins.go</span><a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/plugins.go#L129" target="_blank" rel="external">plugins.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">// 默认关闭的plugin
+func DefaultOffAdmissionPlugins() sets.String {
+	//定义默认开启的插件
+	defaultOnPlugins := sets.NewString(
+		lifecycle.PluginName,                //NamespaceLifecycle
+		limitranger.PluginName,              //LimitRanger
+		serviceaccount.PluginName,           //ServiceAccount
+		setdefault.PluginName,               //DefaultStorageClass
+		resize.PluginName,                   //PersistentVolumeClaimResize
+		defaulttolerationseconds.PluginName, //DefaultTolerationSeconds
+		mutatingwebhook.PluginName,          //MutatingAdmissionWebhook
+		validatingwebhook.PluginName,        //ValidatingAdmissionWebhook
+		resourcequota.PluginName,            //ResourceQuota
+	)
+	//根据feature是否支持，来决定plugin是否启用
+	if utilfeature.DefaultFeatureGate.Enabled(features.PodPriority) {
+		defaultOnPlugins.Insert(podpriority.PluginName) //PodPriority
+	}
+	if utilfeature.DefaultFeatureGate.Enabled(features.TaintNodesByCondition) {
+		defaultOnPlugins.Insert(nodetaint.PluginName) //TaintNodesByCondition
+	}
+	//排除所有的默认开启插件，其余的为默认关闭插件
+	return sets.NewString(AllOrderedPlugins...).Difference(defaultOnPlugins)
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h4 id="这段代码主要是说明默认关闭的admission-controller">这段代码主要是说明默认关闭的admission controller</h4>
+<ul>
+<li>
+<p>默认开启的admission controller:</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">NamespaceLifecycle</td>
+<td>确保处于termination状态的namespace不再接收任何新对象的请求，并拒绝请求不存在的namespace。</td>
+</tr>
+<tr>
+<td align="center">LimitRanger</td>
+<td>在多租户配额时相当有用，如果pod没配额，那么我可以默认给个很低的配额</td>
+</tr>
+<tr>
+<td align="center">ServiceAccount</td>
+<td>在pod没有设置serviceAccount属性时,将这个pod的sa设置为&quot;default&rdquo;;在安全环境下使用，因为default这个sa的权限是admin权限。</td>
+</tr>
+<tr>
+<td align="center">DefaultStorageClass</td>
+<td>默认存储类型</td>
+</tr>
+<tr>
+<td align="center">PersistentVolumeClaimResize</td>
+<td>检查传入的 PersistentVolumeClaim 调整大小请求，对其执行额外的验证操作。（注意：对调整卷大小的支持是一种 Alpha 特性。管理员必须将特性门控 ExpandPersistentVolumes 设置为 true 才能启用调整大小。）</td>
+</tr>
+<tr>
+<td align="center">DefaultTolerationSeconds</td>
+<td>设置POD的默认forgiveness toleration为5分钟。</td>
+</tr>
+<tr>
+<td align="center">MutatingAdmissionWebhook</td>
+<td>变更准入控制webhook</td>
+</tr>
+<tr>
+<td align="center">ValidatingAdmissionWebhook</td>
+<td>验证准入控制webhook</td>
+</tr>
+<tr>
+<td align="center">ResourceQuota</td>
+<td>多租户配额时比较重要，看资源是否满足resource quota中的配置</td>
+</tr>
+</tbody>
+</table>
+<p><div class="alert info ">
+  <p>这里有两个比较特殊的控制器:MutatingAdmissionWebhook 和 ValidatingAdmissionWebhook。</p>
+</div>
+这两个控制器将发送准入请求到外部的 HTTP 回调服务并接收一个准入响应。如果启用了这两个准入控制器，Kubernetes 管理员可以在集群中创建和配置一个 admission webhook。</p>
+</li>
+<li>
+<p>根据版本开启的feature
+<div class="alert info ">
+  <p>而这里需要注意admission controller 需要进行版本判断,目前 PodPriority和TaintNodesByCondition需要根据不同的版本来判断是否开启这个功能，至于这俩插件的具体功能就不具体赘述了。我们这里主要讲述admission的原理。</p>
+</div>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>plugins.go</span><a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/features/kube_features.go#L129" target="_blank" rel="external">kube_features.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">    
+// owner: @bsalamat
+// alpha: v1.8
+// beta: v1.11
+// GA: v1.14
+//
+// Add priority to pods. Priority affects scheduling and preemption of pods.
+PodPriority utilfeature.Feature = &#34;PodPriority&#34;
+
+// owner: @k82cn
+// beta: v1.12
+//
+// Taint nodes based on their condition status for &#39;NetworkUnavailable&#39;,
+// &#39;MemoryPressure&#39;, &#39;PIDPressure&#39; and &#39;DiskPressure&#39;.
+TaintNodesByCondition utilfeature.Feature = &#34;TaintNodesByCondition&#34;
+	</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+这里详细说明了具体功能的功能阶段对应的版本号。</p>
+</li>
+<li>
+<p>最后最终处理一下默认关闭的admission
+sets.NewString(AllOrderedPlugins&hellip;).Difference(defaultOnPlugins) 将默认开启的admission排除后为默认关闭的admission。</p>
+</li>
+</ul>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>plugins.go</span><a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/plugins.go#L61" target="_blank" rel="external">plugins.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">// AllOrderedPlugins is the list of all the plugins in order.
+// 对所有的plugins进行一次排序，按照顺序进行加载
+var AllOrderedPlugins = []string{
+	admit.PluginName,                        // AlwaysAdmit
+	...   // 这里省略代码
+}
+
+// RegisterAllAdmissionPlugins registers all admission plugins and
+// sets the recommended plugins order.
+// 注册所有的plugins，只是在代码中注册而已。 手动注册插件
+func RegisterAllAdmissionPlugins(plugins *admission.Plugins) {
+	admit.Register(plugins) // DEPRECATED as no real meaning
+	...   // 这里省略代码
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h4 id="这段代码主要是把所有支持的admission-controller进行注册和排序">这段代码主要是把所有支持的admission controller进行注册和排序</h4>
+<ul>
+<li>AllOrderedPlugins 是对所有的插件进行了一次排序</li>
+<li>RegisterAllAdmissionPlugins 所有支持的插件在Kubernetes的代码中进行了注册</li>
+</ul>
+<p>看到这里我们知道了其实注册admission controller的话跟我们在apiserver中配置的<span class="highlight-text yellow">顺序并无太大的关系</span>，内部已经定好了加载顺序了。而且如果我们要在kubernetes改动源码来编写对应的admission controller的话
+需要我们在这两个函数也注册一下我们的plugin否则kubernetes是不认识的。</p>
+<h3 id="编写一个自定义的插件">编写一个自定义的插件</h3>
+<p>所有的插件定义都在kubernetes/plugin/pkg/admission。其实是比较简单的。</p>
+<ol>
+<li>实现admission controller对应的接口</li>
+<li>定义并注册这个插件</li>
+<li>在<a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/plugins.go" title="plugins.go">plugins.go</a>中的RegisterAllAdmissionPlugins函数中调用之前写好的注册函数</li>
+<li>在<a href="https://github.com/kubernetes/kubernetes/blob/575467a0eaf3ca1f20eb86215b3bde40a5ae617a/pkg/kubeapiserver/options/plugins.go" title="plugins.go">plugins.go</a>中的AllOrderedPlugins函数中把写好的插件进行排序</li>
+</ol>
+<h4 id="实现admission-controller对应的接口">实现admission controller对应的接口</h4>
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight go language-go">
+  <figcaption>
+    
+      <span>interface.go</span><a href="https://github.com/kubernetes/apiserver/blob/1aff9bcb80e0fc7b146741278330bb48d3482276/pkg/admission/interfaces.go#L123" target="_blank" rel="external">interface.go</a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-go"><code class="go">// Interface is an abstract, pluggable interface for Admission Control decisions.
+type Interface interface {
+	// Handles returns true if this admission controller can handle the given operation
+	// where operation can be one of CREATE, UPDATE, DELETE, or CONNECT
+	Handles(operation Operation) bool
+}
+
+type MutationInterface interface {
+	Interface
+
+	// Admit makes an admission decision based on the request attributes
+	Admit(a Attributes, o ObjectInterfaces) (err error)
+}
+
+// ValidationInterface is an abstract, pluggable interface for Admission Control decisions.
+type ValidationInterface interface {
+	Interface
+
+	// Validate makes an admission decision based on the request attributes.  It is NOT allowed to mutate
+	Validate(a Attributes, o ObjectInterfaces) (err error)
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<ul>
+<li>
+<p>Handles函数
+主要是告诉kubernetes这个admission是否能处理对应的操作，具体的操作有: CREATE, UPDATE, DELETE, or CONNECT。</p>
+<ul>
+<li>如果无需处理则直接返回true即可</li>
+<li>admission.NewHandler(admission.Create, admission.Update) 可调用公共方法来直接生成方法实现。</li>
+</ul>
+</li>
+<li>
+<p>Admit函数
+对kubernetes的资源进行处理或者修改等，比如加个label什么的。</p>
+</li>
+<li>
+<p>Validate
+对请求数据的具体属性进行一次验证，比如验证k8s的资源定义是否符合规则等。</p>
+</li>
+</ul>
+<p>由于admission controller会在apiserver接收到数据后优先进行Admit函数修改资源后再调用Validate进行验证资源数据属性的合法性。所以这里可以看到
+<span class="highlight-text yellow">Validate其实本质上就是Admit的一个验证而已</span>。</p>
+<h4 id="定义并注册这个插件">定义并注册这个插件</h4>
+<ol>
+<li>定义插件名
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">const PluginName = &#34;AlwaysPullImages&#34;</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure></li>
+<li>声明插件对应的结构体
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">type AlwaysPullImages struct {
+	*admission.Handler
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+这里需要注意一下,*admission.Handler其实就是之前需要实现的函数&quot;Handles函数&rdquo;,这里如果无需处理单独直接写也可以的:
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">// Handles returns true if this admission controller can handle the given operation
+// where operation can be one of CREATE, UPDATE, DELETE, or CONNECT
+func (alwaysAdmit) Handles(operation admission.Operation) bool {
+	return true
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+也可以直接在初始化方法的时候调用kubernetes的方法进行初始化:
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">// NewAlwaysPullImages creates a new always pull images admission control handler
+func NewAlwaysPullImages() *AlwaysPullImages {
+	return &amp;AlwaysPullImages{
+		Handler: admission.NewHandler(admission.Create, admission.Update),
+	}
+}
+var _ admission.MutationInterface = &amp;AlwaysPullImages{}
+var _ admission.ValidationInterface = &amp;AlwaysPullImages{}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+这里需要注意需要定义对应admission所实现的接口到当前结构，否则注册时候无法注册到admission中去。如下代码:
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">var _ admission.MutationInterface = &amp;AlwaysPullImages{}
+var _ admission.ValidationInterface = &amp;AlwaysPullImages{}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure></li>
+<li>将这个插件注册到admission中去
+其实就是把写好的初始化函数注册到admission中
+
+  
+    
+  
+  
+  
+  
+
+
+<figure class="highlight  language-">
+  <figcaption>
+    
+      <span>go</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-"><code class="">// Register registers a plugin
+func Register(plugins *admission.Plugins) {
+	plugins.Register(PluginName, func(config io.Reader) (admission.Interface, error) {
+		return NewAlwaysPullImages(), nil
+	})
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure></li>
+</ol>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/kubernetes/">kubernetes</a>
+
+  <a class="tag tag--primary tag--small" href="https://cuisongliu.github.io/tags/admission-controller/">admission-controller</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav style="visibility: hidden">
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/03/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook原理 (未完成)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 <a href="https://github.com/cuisongliu">cuisongliu</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav style="visibility: hidden">
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/03/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook原理 (未完成)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://cuisongliu.github.io/2020/05/kubernetes/admission-controller/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcuisongliu.github.io%2F2020%2F05%2Fkubernetes%2Fadmission-controller%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fcuisongliu.github.io%2F2020%2F05%2Fkubernetes%2Fadmission-controller%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/130d14faedf30e83c0e41f375ba21f30?s=110" alt="作者的图片" />
+    
+    <h4 id="about-card-name">cuisongliu</h4>
+    
+      <div id="about-card-bio">疯狂源于梦想,技术成就辉煌。</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Kubenetes开发
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        天津
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://cuisongliu.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://cuisongliu.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha256-putofyQv7OB569xAldpyBnHJ0Uc+7VGp5Us05IgDGss=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/dockerfile.min.js"></script>
+  
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/cuisongliu.github.io\/2020\/05\/kubernetes\/admission-controller\/';
+          
+            this.page.identifier = '\/2020\/05\/kubernetes\/admission-controller\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'cuisongliu';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
