@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.71.0-DEV with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.66.0-DEV with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="cuisongliu">
 <meta name="keywords" content=", development, kubenetes">
 <meta name="description" content="本文主要讲解kubernetes的admission controller调用过程，以及原理设计。">
@@ -301,13 +301,12 @@
   <div style="clear:both;"></div>
 
 <div class="alert info ">
-  <p><p>APIServer其实最重要的三件事情就是：</p>
+  <p>APIServer其实最重要的三件事情就是：</p>
 <ul>
 <li>认证: 用户是否合法</li>
 <li>授权: 用户拥有哪些权限</li>
 <li>准入控制: 一个调用链，对请求进行修改或拒绝</li>
-</ul>
-</p>
+</ul></p>
 </div></p>
 <p>这个准入控制器是十分有用的，也是kubernetes一种比较常见的扩展方式。现在，我们将详细的介绍一下这个admission controller。</p>
 <h3 id="admission-controller支持参数说明">admission controller支持参数说明</h3>
@@ -937,7 +936,7 @@ func Register(plugins *admission.Plugins) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/07/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook生成证书">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -945,7 +944,7 @@ func Register(plugins *admission.Plugins) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/03/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook原理 (未完成)">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/12/kubernetes/client-go-1/" data-tooltip="client-go原理">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -1017,7 +1016,7 @@ func Register(plugins *admission.Plugins) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/07/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook生成证书">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -1025,7 +1024,7 @@ func Register(plugins *admission.Plugins) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2020/03/kubernetes/admission-webhook/" data-tooltip="kubernetes 之 admission webhook原理 (未完成)">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://cuisongliu.github.io/2019/12/kubernetes/client-go-1/" data-tooltip="client-go原理">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
